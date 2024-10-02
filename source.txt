@@ -1,0 +1,18 @@
+int x;
+int y;
+int a;
+int b;
+int c;
+float l;
+x = 1; 
+l = 10;
+a = 12;
+b = 23 + 10;
+x = a * a + 1;
+y = x + a + b + c + a + 5;
+write x;
+write l;
+write (l);
+l = x + 1;
+
+ 
