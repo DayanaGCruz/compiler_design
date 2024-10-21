@@ -53,13 +53,15 @@ SymbolTable* createSymbolTable(int size)
     table->table = calloc(size, sizeof(Symbol*));
 }
 
-void insertSymbol(SymbolTable* table, const char* identifier, char* type, int line)
+void insertSymbol(SymbolTable* table, const char* identifier, char* type, int lineno)
 {
     unsigned int index = hash(identifier, table->size);
     Symbol* newEntry = malloc(sizeof(Symbol));
+    if (newEntry == NULL)
+    { return; }
     strncpy(newEntry->identifier, identifier, MAX_IDENT_LEN);
     newEntry->type = getSymbolType(type);
-    newEntry->line = line;
+    newEntry->lineno = lineno;
     newEntry->next = table->table[index];
     table->table[index] = newEntry;
 }
@@ -97,7 +99,7 @@ void printSymbolTable(SymbolTable* table)
         while (symbol != NULL)
         {
             // Print each symbol in the current index with proper formatting
-            printf("| %-10s | %-20s | %-30d |\n", getSymbolTypeString(symbol->type), symbol->identifier, symbol->line);
+            printf("| %-10s | %-20s | %-30d |\n", getSymbolTypeString(symbol->type), symbol->identifier, symbol->lineno);
             symbol = symbol->next;  // Move to the next symbol in the chain
         }
     }

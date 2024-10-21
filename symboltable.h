@@ -18,7 +18,7 @@ typedef struct Symbol {
     char identifier[MAX_IDENT_LEN];
     VarType type;
     struct Symbol* next;
-    int line;
+    int lineno;
 } Symbol;
 
 typedef struct SymbolTable 

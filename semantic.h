@@ -16,6 +16,7 @@ typedef struct
 extern TAC* tacHead; /**/
 extern int semerrorno;
 void semanticAnalysis(Node*, SymbolTable* symbolTable);
+int checkTypeCompatibility(const char* type1, const char* type2);
 TAC* generateTAC(Node* node);
 ;
 #endif

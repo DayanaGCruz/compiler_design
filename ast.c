@@ -18,6 +18,7 @@ const char* getNodeTypeString(NodeType type) {
         case node_stmt_list: return "Statement List";
         case node_stmt: return "Statement";
         case node_declaration: return "Declaration";
+        case node_funcdecl: return "Function Declaration";
         case node_assignment: return "Assignment";
         case node_typekw: return "Type";
         case node_print_stmt: return "Print Statement";
@@ -33,7 +34,7 @@ const char* getNodeTypeString(NodeType type) {
 Node* createNode(NodeType nodeType) {
     Node* node = (Node*)malloc(sizeof(Node));
     node->nodeType = nodeType;  // Set node type
-
+    int lineno = NULL;
     /* Initialize the attributes for each node type */
     switch (nodeType) {
         case node_program:
@@ -50,6 +51,10 @@ Node* createNode(NodeType nodeType) {
             node->declaration.type = NULL;
             node->declaration.identifier = NULL;
             break;
+        case node_funcdecl:
+            node->funcdecl.type = NULL;
+            node->funcdecl.identifier = NULL;
+            break;
         case node_assignment:
             node->assignment.assign = NULL;
             node->assignment.identifier = NULL;
@@ -62,7 +67,7 @@ Node* createNode(NodeType nodeType) {
             node->print_stmt.expr = NULL;
             break;
         case node_expr:
-            node->expr.operator = '\0'; /* Initialize operator*/
+            node->expr.operator = '\0'; 
             node->expr.left = NULL;
             node->expr.right = NULL;
             break;
@@ -78,6 +83,7 @@ Node* createNode(NodeType nodeType) {
             break;
         case node_number:
             node->number.value = NULL;
+            node->number.type = NULL;
             break;
         default:
             printf("AST | Unrecognizable NodeType argument passed\n");

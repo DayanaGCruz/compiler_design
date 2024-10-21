@@ -10,6 +10,7 @@ typedef enum {
     node_stmt_list,
     node_stmt,
     node_declaration,
+    node_funcdecl,
     node_assignment,
     node_typekw,
     node_print_stmt,
@@ -22,18 +23,21 @@ typedef enum {
 typedef struct Node
 {
 NodeType nodeType; 
+int lineno;
 union {
     struct  {struct Node* stmt_list;} program;
     struct  {struct Node* stmt; struct Node* stmt_list;} stmt_list; 
     struct  {struct Node* right;}stmt;
-    struct  {struct Node* type; /* typekw node*/char* identifier;} declaration;
+    struct  {struct Node* type; /* typekw node */char* identifier;} declaration;
+    struct  {struct Node* type; /* typekw node */ char* identifier; Node** param_decl_list;} funcdecl;
+    struct  {struct Node* declaration; struct Node* param_decl_list;} param_decl_list;
     struct  {char* assign; /* = */char* identifier; struct Node* expr;} assignment;
     struct  {char* operator; struct Node* left; struct Node* right;} expr;
     struct  {struct Node* expr;} print_stmt;
     struct  {char* type;} typekw;
     struct  {char* operator; struct Node* term; struct Node* factor;} term;
     struct  {struct Node* expr; struct Node* number; char* identifier;} factor;
-    struct  {char* value; /*Number INT or FLOAT*/} number;
+    struct  {char* type; char* value; /* int or float */ } number;
 };
 }Node;
 

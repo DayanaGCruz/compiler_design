@@ -3,12 +3,19 @@
 %{ 
 	#include "parser.tab.h"
 	#include "ast.h"
+
 	#include "symboltable.h"
-	void yyerror (char* s) {
-		fprintf(stderr, "Ln.  %d: %s: %s\n", yylineno, s, yytext);
+	extern int syntaxerrorno;
+		int lexerrorno;	
+	int lnolastid; /*Holds line no of the last identifier token found*/
+	int* sen = &syntaxerrorno;
+	int* len = &lexerrorno;
+	void yyerror (char* s, int errType) {
+		if(errType == 1){(*sen)++; printf("Incremented syntax error");} 
+		else if (errType == 0) {(*len)++;} 
+		fprintf(stderr, "Ln.%d: %s: %s\n", yylineno, s, yytext);
 	}
-	int lexerrorno;	
-	int lnolastid; /*Holds Ln.  of the last identifier token found*/
+
 	/*
 	struct 
 	{
@@ -43,6 +50,7 @@ RPAREN		")"
 LCURLY		"{"
 RCURLY		"}"
 SEMICOLON	";"
+COMA		","
 %%
 <<EOF>> {return 0;}
 [ \t\n]*	{/*Ignore whitespace*/}
@@ -123,15 +131,16 @@ SEMICOLON	";"
 {SEMICOLON}	{
 		printf("Ln.%d : LEXER : SEMICOLON: %s\n", yylineno, yytext);
 		return SEMICOLON;
-
 		}
+{COMA}  	{
+		printf("Ln.%d : LEXER : COMA: %s\n", yylineno, yytext);
+		return COMA;
+}
 [A-z0-9\_\-\.]* { /*Digits, hyphens, and letters NOT INT FLOAT KEYWORD or IDENTIFIER generate generic lexical error messages */
-		yyerror("Lexical Error");
-		lexerrorno++;
+		yyerror("LEXER : Lexical Error: Illegal Identifier", 0);
 		}
 . 		{ /* Symbols not included in grammar generate lexical error messages - illegal symbol*/
-		yyerror("Illegal Symbol");
-		lexerrorno++;
+		yyerror("LEXER : Lexical Error: Illegal symbol", 0);
 		}
 %%
 
