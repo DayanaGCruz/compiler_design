@@ -7,7 +7,7 @@
 	#include "symboltable.h"
 	extern int syntaxerrorno;
 		int lexerrorno;	
-	int lnolastid; /*Holds line no of the last identifier token found*/
+	int lnolastid; // Holds line no of the last identifier token found
 	int* sen = &syntaxerrorno;
 	int* len = &lexerrorno;
 	void yyerror (char* s, int errType) {
@@ -34,12 +34,14 @@
 	*/
 %}
 
-IDENTIFIER  [A-z]+([_A-z0-9]|[_])*
+IDENTIFIER  [A-Za-z_]+[A-Za-z0-9_]*
+COMMENT		"//".*
 INT		    [0-9]+[0.-9]*
 FLOAT		[0-9]+.[0-9]+
 INTKW		"int"
 FLOATKW		"float"
 PRINTKW		"write"
+RETURNKW	"return"
 ASSIGN		"="
 PLUS		"+"
 MINUS		"-"
@@ -49,16 +51,27 @@ LPAREN		"("
 RPAREN		")"
 LCURLY		"{"
 RCURLY		"}"
+LBRACKET	"["
+RBRACKET	"]"
 SEMICOLON	";"
 COMA		","
 %%
 <<EOF>> {return 0;}
 [ \t\n]*	{/*Ignore whitespace*/}
+{COMMENT} {
+	// Ignore comments
+	printf("Ln.%d : LEXER : // COMMENT: %s\n", yylineno, yytext);
+	}
 {PRINTKW}	{
 		printf("Ln.%d : LEXER : PRINT KEYWORD: %s\n", yylineno, yytext);
 		yylval.string = strdup(yytext);
 		return PRINTKW;
 		}	
+{RETURNKW}	{
+		printf("Ln.%d : LEXER : RETURN KEYWORD: %s\n", yylineno, yytext);
+		yylval.string = strdup(yytext);
+		return RETURNKW;
+}
 {FLOATKW}	{
 		printf("Ln.%d: LEXER : FLOAT TYPE KEYWORD : %s\n", yylineno, yytext);
 		yylval.string = strdup(yytext);
@@ -136,10 +149,18 @@ COMA		","
 		printf("Ln.%d : LEXER : COMA: %s\n", yylineno, yytext);
 		return COMA;
 }
-[A-z0-9\_\-\.]* { /*Digits, hyphens, and letters NOT INT FLOAT KEYWORD or IDENTIFIER generate generic lexical error messages */
+{LBRACKET}	{
+		printf("Ln.%d : LEXER : OPEN BRACKET: %s\n", yylineno, yytext);
+		return LBRACKET;
+}
+{RBRACKET}	{
+		printf("Ln.%d : LEXER : CLOSING BRACKET: %s\n", yylineno, yytext);
+		return RBRACKET;
+}
+[A-z0-9\_\-\.]* { //Digits, hyphens, and letters NOT INT FLOAT KEYWORD or IDENTIFIER generate generic lexical error messages
 		yyerror("LEXER : Lexical Error: Illegal Identifier", 0);
 		}
-. 		{ /* Symbols not included in grammar generate lexical error messages - illegal symbol*/
+. 		{ // Symbols not included in grammar generate lexical error messages - illegal symbol
 		yyerror("LEXER : Lexical Error: Illegal symbol", 0);
 		}
 %%

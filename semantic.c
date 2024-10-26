@@ -4,13 +4,15 @@
 TAC* tacHead = NULL;
 Node* temp_node;
 char* temp_string;
-Symbol* sym; /* temp symbol pointer*/
+Symbol* sym; // temp symbol pointer
 char* lExprType;
 char* rExprType;
+Symbol* currentScope;
+
 void semanticAnalysis(Node* root, SymbolTable* symbolTable)
 {
     if(root == NULL) return;
-    sym = NULL; /*Reset temp symbol*/
+    sym = NULL; //Reset temp symbol
     switch (root->nodeType) 
     {
         case node_program:
@@ -30,8 +32,9 @@ void semanticAnalysis(Node* root, SymbolTable* symbolTable)
             break;
         case node_declaration:
             printf("IN DECLARATION\n");
-            sym = lookupSymbol(symbolTable, root->declaration.identifier);
+            sym = lookupSymbol(symbolTable,  currentScope, root->declaration.identifier);
             printf("IDENTIFIER: %s\n", root->declaration.identifier);
+            printf(sym->identifier);
             if(sym != NULL) {
                 semerrorno++;
                 if(root->lineno != NULL && root->declaration.identifier != NULL && sym->lineno != NULL)
@@ -42,14 +45,112 @@ void semanticAnalysis(Node* root, SymbolTable* symbolTable)
                 printf("INSERTING SYMBOL\n");
                 if(root->declaration.type->typekw.type != NULL && root->declaration.identifier != NULL && root->lineno != NULL) 
                 {
-                    insertSymbol(symbolTable, root->declaration.identifier, root->declaration.type->typekw.type, root->lineno);
+                    insertSymbol(symbolTable, currentScope, root->declaration.identifier, root->declaration.type->typekw.type, decl_var, root->lineno);
                 }
             }
             semanticAnalysis(root->declaration.type,symbolTable);
             break;
+        case node_func_decl:
+            printf("IN FUNC DECL\n");
+            sym = lookupSymbol(symbolTable,  currentScope, root->func_decl.identifier);
+            if(sym != NULL) 
+            {
+                if(sym->scope == local && sym->parent_scope->identifier == currentScope->parent_scope->identifier)
+                {
+                    semerrorno++;
+                    if(root->lineno != NULL && root->func_decl.identifier != NULL && sym->lineno != NULL)
+                    {
+                        printf("Ln.%d : SEMANTIC ERROR: Duplicate function declaration : Identifier %s already declared on line %d\n", root->lineno ,root->func_decl.identifier, sym->lineno);
+                        
+                    }   
+                }
+            } else 
+            {
+                if(root->func_decl.type->typekw.type != NULL && root->func_decl.identifier != NULL && root->lineno != NULL) 
+                {
+                    insertSymbol(symbolTable, currentScope, root->func_decl.identifier, root->func_decl.type->typekw.type, decl_func, root->lineno);
+                }
+                currentScope = lookupSymbol(symbolTable, currentScope, root->func_decl.identifier);
+                semanticAnalysis(root->func_decl.type, symbolTable);
+                semanticAnalysis(root->func_decl.params, symbolTable);
+                currentScope = NULL;
+                printf("CURRENT SCOPE CHECK2: %s\n", currentScope->identifier);
+            }
+            break;
+        case node_func_params:
+            printf("IN FUNC PARAMS\n");
+            if(root->func_params.param_list != NULL) 
+                semanticAnalysis(root->func_params.param_list, symbolTable);
+            break;
+        case node_param_list:
+            printf("IN PARAM LIST\n");
+            if(root->param_list.param != NULL) 
+                semanticAnalysis(root->param_list.param, symbolTable);
+            if(root->param_list.param_list != NULL) 
+                semanticAnalysis(root->param_list.param_list, symbolTable);
+            break;
+        case node_param:
+            printf("IN PARAM\n");
+            printf("Current scope: %s\n", currentScope->identifier);
+            sym = lookupSymbol(symbolTable,  currentScope, root->param.identifier);
+            if(sym != NULL) 
+            {
+                if(sym->parent_scope->identifier != currentScope->identifier)
+                {
+                    semerrorno++;
+                    if(root->lineno != NULL && root->param.identifier != NULL && sym->lineno != NULL)
+                    {
+                        printf("Ln.%d : SEMANTIC ERROR: Duplicate parameter declaration : Identifier %s already declared on line %d\n", root->lineno ,root->param.identifier, sym->lineno);
+                    }   
+                } 
+            } else {
+                if(root->param.type->typekw.type != NULL && root->param.identifier != NULL && root->lineno != NULL) 
+                {
+                    insertSymbol(symbolTable,  currentScope, root->param.identifier, root->param.type->typekw.type, decl_param, root->lineno);
+                }
+            }
+            break;
+        case node_func_call:
+            printf("IN FUNC CALL\n");
+            printf("CURRENT SCOPE CHECK: %s\n", currentScope->identifier);
+            sym = lookupSymbol(symbolTable,  currentScope, root->func_call.identifier);
+            if(sym == NULL) {
+                semerrorno++;
+                printf("Ln.%d. SEMANTIC ERROR: Undeclared function reference : Function %s not declared\n", root->lineno, root->func_call.identifier);
+            }
+            break;
+        case node_func_args:
+            printf("IN FUNC ARGS\n");
+            if(root->func_args.arg_list != NULL) 
+                semanticAnalysis(root->func_args.arg_list, symbolTable);
+            break;
+        case node_arg_list:
+            printf("IN ARG LIST\n");
+            if(root->arg_list.arg != NULL) 
+                semanticAnalysis(root->arg_list.arg, symbolTable);
+            if(root->arg_list.arg_list != NULL) 
+                semanticAnalysis(root->arg_list.arg_list, symbolTable);
+            break;
+        case node_arg:
+            printf("IN ARG\n");
+            semanticAnalysis(root->arg.expr, symbolTable);
+            break;
+        case node_func_def:
+            printf("IN FUNC DEF\n");
+            sym = lookupSymbol(symbolTable,  currentScope, root->func_def.identifier);
+            if(sym == NULL) {
+                insertSymbol(symbolTable, currentScope, root->func_def.identifier, root->func_def.type->typekw.type, decl_func, root->lineno);
+            } 
+            currentScope = lookupSymbol(symbolTable, currentScope, root->func_decl.identifier);
+            semanticAnalysis(root->func_def.type, symbolTable);
+            semanticAnalysis(root->func_def.params, symbolTable);
+            semanticAnalysis(root->func_def.stmt_list, symbolTable);
+            currentScope = NULL;
+            break;
         case node_assignment:
-        printf("IN ASSIGNMENT\n");
-            sym = lookupSymbol(symbolTable, root->assignment.identifier);
+            printf("IN ASSIGNMENT\n");
+            if(root->assignment.identifier != NULL) sym = lookupSymbol(symbolTable,  currentScope, root->assignment.identifier) ;          
+            else { sym=lookupSymbol(symbolTable, currentScope, root->assignment.assignee->array_index.identifier);}
             if(sym == NULL) {
                 semerrorno++;
                 printf("Ln.%d. SEMANTIC ERROR: Undeclared variable reference : Variable %s not declared\n", root->lineno, root->assignment.identifier);
@@ -96,7 +197,7 @@ void semanticAnalysis(Node* root, SymbolTable* symbolTable)
             if (root->factor.identifier != NULL) 
             {
                 printf("IN FACTOR IDENTIFIER\n");
-                sym = lookupSymbol(symbolTable, root->factor.identifier);
+                sym = lookupSymbol(symbolTable,  currentScope, root->factor.identifier);
                 if(sym == NULL) {
                     semerrorno++;
                     printf("Ln.%d SEMANTIC ERROR: Undeclared variable reference : Variable %s not declared\n", root->lineno, root->factor.identifier);
@@ -104,10 +205,10 @@ void semanticAnalysis(Node* root, SymbolTable* symbolTable)
                 {
                     if(lExprType == NULL)
                     {
-                        lExprType = getSymbolTypeString(sym->type);
+                        lExprType = getSymbolTypeString(sym->dataType);
                     }
                     else if(rExprType == NULL) {
-                        rExprType = getSymbolTypeString(sym->type);
+                        rExprType = getSymbolTypeString(sym->dataType);
                     }
                 }
             }
@@ -132,6 +233,21 @@ void semanticAnalysis(Node* root, SymbolTable* symbolTable)
                     
                 }
             break;
+        case node_array_decl:
+            printf("IN ARRAY DECL\n");
+            sym = lookupSymbol(symbolTable,  currentScope, root->array_decl.identifier);
+            if(sym != NULL) {
+                semerrorno++;
+                if(root->lineno != NULL && root->array_decl.identifier != NULL && sym->lineno != NULL)
+                {
+                    printf("Ln.%d : SEMANTIC ERROR: Duplicate array declaration : Identifier %s already declared on line %d\n", root->lineno ,root->array_decl.identifier, sym->lineno);
+                }    
+            } else {
+                if(root->array_decl.type->typekw.type != NULL && root->array_decl.identifier != NULL && root->lineno != NULL) 
+                {
+                    insertSymbol(symbolTable, currentScope, root->array_decl.identifier, root->array_decl.type->typekw.type, decl_var, root->lineno);
+                }
+            }
         default:
             printf("Unknown Node\n");
             break;

@@ -1,0 +1,4 @@
+make
+bison
+flex
+build-essential 
