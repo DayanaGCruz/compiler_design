@@ -39,7 +39,7 @@ struct FactorNode* head = NULL;
 %token PRINTKW INTKW FLOATKW RETURNKW
 
 
-%type <ast> program stmt_list stmt declaration func_call func_def return_stmt array_decl array_def array_index expr_list func_args arg_list arg func_decl func_params param_list param assignment print_stmt type term factor number expr 
+%type <ast> program stmt_list stmt declaration var_decl func_call func_def return_stmt array_decl array_def array_index expr_list func_args arg_list arg func_decl func_params param_list param assignment print_stmt type term factor number expr 
 %type <string> IDENTIFIER INTKW FLOATKW FLOAT INT 
 %type <operator> ASSIGN MINUS PLUS MUL DIV
 
@@ -69,7 +69,7 @@ stmt_list: stmt stmt_list
 		$$->lineno = yylineno; 
 	}
 	;
-stmt: declaration 
+stmt: var_decl SEMICOLON
 	{
 		$$ = createNode(node_stmt);
 		$$->stmt.right = $1;
@@ -125,18 +125,18 @@ stmt: declaration
 	}
 	| expr error {syntaxerrorno++; printf("Ln.%d : SYNTAX ERROR : MISSING SEMICOLON\n", lnolastid);}
 	;
-array_decl: type IDENTIFIER LBRACKET expr RBRACKET SEMICOLON
+
+array_decl: declaration LBRACKET expr RBRACKET SEMICOLON
 {
 	printf("Found array decl\n");
 	$$ = createNode(node_array_decl);
-	$$->array_decl.type = $1;
-	$$->array_decl.identifier = $2;
-	$$->array_decl.size = $4;
+	$$->array_decl.decl = $1;
+	$$->array_decl.size = $3;
 	$$->lineno = yylineno;
 }
 ;
 
-declaration: type IDENTIFIER SEMICOLON 
+declaration: type IDENTIFIER
 	{
 		printf("PARSER : Found  declaration\n");
 		$$ = createNode(node_declaration);
@@ -144,27 +144,27 @@ declaration: type IDENTIFIER SEMICOLON
 		$$->declaration.identifier = $2;
 		$$->lineno = lnolastid;
 	}
-	| type IDENTIFIER error {syntaxerrorno++; printf("SYNTAX ERROR : MISSING SEMICOLON\n");}
 	;
 
-func_def: type IDENTIFIER LPAREN func_params RPAREN LCURLY stmt_list RCURLY 
+var_decl: declaration 
+	;
+	
+func_def: declaration LPAREN func_params RPAREN LCURLY stmt_list RCURLY 
 	{
 		printf("Found function definition\n");
 		$$ = createNode(node_func_def);
-		$$->func_def.type = $1;
-		$$->func_def.identifier = $2;
-		$$->func_def.params = $4; 
-		$$->func_def.stmt_list = $7;
+		$$->func_def.decl = $1;
+		$$->func_def.params = $3; 
+		$$->func_def.stmt_list = $6;
 		$$->lineno = yylineno;
 	}
 	;
-func_decl: type IDENTIFIER LPAREN func_params RPAREN SEMICOLON
+func_decl: declaration LPAREN func_params RPAREN SEMICOLON
 	{
 		printf("PARSER : Found function declaration\n");
 		$$ = createNode(node_func_decl);
-		$$->func_decl.type = $1;
-		$$->func_decl.identifier = $2;
-		$$->func_decl.params = $4;
+		$$->func_decl.decl = $1;
+		$$->func_decl.params = $3;
 		$$->lineno = yylineno;
 	}
 	;
@@ -270,7 +270,15 @@ type: FLOATKW
 		$$->lineno = yylineno;
 	}
 	;
-assignment: IDENTIFIER ASSIGN expr SEMICOLON 
+assignment: var_decl ASSIGN expr SEMICOLON
+	{	
+		$$ = createNode(node_assignment);
+		$$->assignment.assignee = $1;
+		$$->assignment.assign = $2;
+		$$->assignment.expr = $3;
+		$$->lineno = yylineno;
+	}
+	| IDENTIFIER ASSIGN expr SEMICOLON 
 	{
 		$$ = createNode(node_assignment);
 		$$->assignment.identifier = $1;

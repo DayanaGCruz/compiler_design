@@ -185,7 +185,19 @@ void printSymbolTable(SymbolTable* table)
     printf("=======================================================================================================================================================================================================\n");
 }
 
-
+void printSymbol(Symbol* symbol)
+{
+    if (symbol == NULL) {
+        printf("Symbol is NULL\n");
+        return;
+    }
+    printf("Symbol: %s\n", symbol->identifier);
+    printf("Data Type: %s\n", getSymbolTypeString(symbol->dataType));
+    printf("Scope: %s\n", getScopeTypeString(symbol->scope));
+    printf("Parent Scope: %s\n", symbol->parent_scope->identifier);
+    printf("Declaration Type: %s\n", getDeclTypeString(symbol->declType));
+    printf("Line No.: %d\n", symbol->lineno);
+}
 
 
 // Delete symbol table

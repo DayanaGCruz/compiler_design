@@ -44,7 +44,7 @@ union {
                     // typekew node 
     struct  {struct Node* type; char* identifier;} declaration;
                     // Return type - typekw node        // func_params node 
-    struct  {struct Node* type; char* identifier; struct Node* params;} func_decl;
+    struct  {struct Node* decl; struct Node* params;} func_decl;
     struct  {struct Node* param_list;} func_params;
     struct  {struct Node* param; struct Node* param_list;} param_list;
                     // typekw node 
@@ -54,7 +54,7 @@ union {
     struct  {struct Node* arg; struct Node* arg_list;} arg_list;
     // An expression can be processed to a term, factor, or identifier according to the grammar
     struct  {struct Node* expr;} arg;
-    struct {struct Node* type; char* identifier; struct Node* params; struct Node* stmt_list;} func_def;
+    struct {struct Node* decl; struct Node* params; struct Node* stmt_list;} func_def;
     struct  {char* assign; /* = */char* identifier; struct Node* assignee; struct Node* expr;} assignment;
     struct  {char* operator; struct Node* left; struct Node* right;} expr;
     struct  {struct Node* expr;} print_stmt;
@@ -63,7 +63,7 @@ union {
     struct  {struct Node* expr; struct Node* number; char* identifier;} factor;
             // int or float 
     struct  {struct Node* type; char* value; } number;
-    struct {struct Node* type; char* identifier; struct Node* size; } array_decl;
+    struct {struct Node* decl; struct Node* size; } array_decl;
     struct {struct Node* expr_list;} array_def;
     struct {struct Node* expr; struct Node* expr_list; } expr_list;
     struct {struct Node* type; char* identifier; struct Node* index; } array_index;

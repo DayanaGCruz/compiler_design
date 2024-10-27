@@ -68,8 +68,7 @@ Node* createNode(NodeType nodeType)
             node->func_call.args = NULL;
             break;
         case node_func_decl:
-            node->func_decl.type = NULL;
-            node->func_decl.identifier = NULL;
+            node->func_decl.decl = NULL;
             node->func_decl.params = NULL;
             break;
         case node_func_params:
@@ -94,8 +93,7 @@ Node* createNode(NodeType nodeType)
             node->param.identifier = NULL;
             break;
         case node_func_def:
-            node->func_def.type = NULL;
-            node->func_def.identifier = NULL;
+            node->func_def.decl = NULL;
             node->func_def.params = NULL;
             node->func_def.stmt_list = NULL;
             break;
@@ -131,8 +129,7 @@ Node* createNode(NodeType nodeType)
             node->number.type = NULL;
             break;
         case node_array_decl:
-            node->array_decl.type = NULL;
-            node->array_decl.identifier = NULL;
+            node->array_decl.decl = NULL;
             node->array_decl.size = NULL;
             break;
         case node_array_def:
@@ -191,9 +188,7 @@ void traverseAST(Node* root, int depth, const char* direction) {
             break;
         case node_func_decl:
             printf("%s\n", getNodeTypeString(root->nodeType));
-            structure(depth + 1, "|");
-            printf("Identifier: %s\n", root->func_decl.identifier);
-            traverseAST(root->func_decl.type, depth + 1, "↘");
+            traverseAST(root->func_decl.decl, depth + 1, "↙");
             traverseAST(root->func_decl.params, depth + 1, "↘");
             break;
         case node_func_params:
@@ -238,9 +233,7 @@ void traverseAST(Node* root, int depth, const char* direction) {
             break;
         case node_func_def:
             printf("%s\n", getNodeTypeString(root->nodeType));
-            structure(depth + 1, "|");
-            printf("Identifier: %s\n", root->func_def.identifier);
-            traverseAST(root->func_def.type, depth + 1, "↙");
+            traverseAST(root->func_def.decl, depth + 1, "↙");
             traverseAST(root->func_def.params, depth + 1, "↙");
             traverseAST(root->func_def.stmt_list, depth + 1, "↘");
             break;
@@ -312,9 +305,7 @@ void traverseAST(Node* root, int depth, const char* direction) {
             break;
         case node_array_decl:
             printf("%s\n", getNodeTypeString(root->nodeType));
-            structure(depth + 1, "|");
-            printf("Identifier: %s\n", root->array_decl.identifier);
-            traverseAST(root->array_decl.type, depth + 1, "↘");
+            traverseAST(root->array_decl.decl, depth + 1, "↙");
             structure(depth + 1, "| Size: \n");
             traverseAST(root->array_decl.size, depth + 1, "↘");
             break;
@@ -389,8 +380,7 @@ void deleteAST(Node* node) {
             deleteAST(node->factor.number);
             break;
         case node_func_decl:
-            deleteAST(node->func_decl.type);
-            if (node->func_decl.identifier) free(node->func_decl.identifier);
+            deleteAST(node->func_decl.decl);
             deleteAST(node->func_decl.params);
             break;
         case node_func_params:
@@ -419,15 +409,13 @@ void deleteAST(Node* node) {
             deleteAST(node->arg.expr);
             break;
         case node_func_def:
-            deleteAST(node->func_def.type);
-            if (node->func_def.identifier) free(node->func_def.identifier);
+            deleteAST(node->func_def.decl);
             deleteAST(node->func_def.params);
             deleteAST(node->func_def.stmt_list);
             break;
         case node_array_decl:
-            deleteAST(node->array_decl.type);
+            deleteAST(node->array_decl.decl);
             deleteAST(node->array_decl.size);
-            if (node->array_decl.identifier) free(node->array_decl.identifier);
             break;
         case node_array_def:
             deleteAST(node->array_def.expr_list);
