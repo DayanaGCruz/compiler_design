@@ -1,3 +1,1 @@
-int hello = 1 ;
-int yo [ 2 ];
- wassup  [ 2 ] = 1 ;
+int y = 2 + 1;

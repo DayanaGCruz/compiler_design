@@ -172,8 +172,7 @@ void traverseAST(Node* root, int depth, const char* direction) {
                 traverseAST(root->stmt_list.stmt, depth + 1, "↙");
             if(root->stmt_list.stmt_list != NULL) 
                 traverseAST(root->stmt_list.stmt_list, depth + 1, "↘");
-            else
-                structure(depth + 1, "| Empty\n");
+            else structure(depth + 1, "| Empty\n");
             break;
         case node_stmt:
             printf("%s\n", getNodeTypeString(root->nodeType));
@@ -218,8 +217,7 @@ void traverseAST(Node* root, int depth, const char* direction) {
             printf("%s\n", getNodeTypeString(root->nodeType));
             if(root->func_args.arg_list != NULL) // Function arguments may be empty with 0 parameters (no parameter list) 
                 traverseAST(root->func_args.arg_list, depth + 1, "↘");
-            else 
-                structure(depth + 1, "| Empty\n");
+            else structure(depth + 1, "| Empty\n");
             break;
         case node_arg_list:
             printf("%s\n", getNodeTypeString(root->nodeType));
@@ -264,10 +262,18 @@ void traverseAST(Node* root, int depth, const char* direction) {
                 structure(depth + 1, "|");
                 printf("Operator: %s\n", root->expr.operator);
             }
-            if(root->expr.left != NULL) 
+            if(root->expr.left != NULL)
+            {
+                printf("Entering Expr L"); 
                 traverseAST(root->expr.left, depth + 1, "↙");
+            }
+            else structure(depth + 1, "| L Empty \n");
             if (root->expr.right != NULL) 
+            {
+                printf("Entering Expr R");
                 traverseAST(root->expr.right, depth + 1, "↘");
+            }
+            else structure(depth + 1, "| R Empty \n");
             break;
         case node_term:
             printf("%s\n", getNodeTypeString(root->nodeType));

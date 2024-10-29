@@ -13,7 +13,7 @@ typedef struct
     struct TAC* next; 
 }TAC;
 
-extern TAC* tacHead; /**/
+extern TAC* tacHead; 
 extern int semerrorno;
 void semanticAnalysis(Node*, SymbolTable* symbolTable);
 int checkTypeCompatibility(const char* type1, const char* type2);

@@ -14,7 +14,7 @@ char* temp_identifier;
 void semanticAnalysis(Node* root, SymbolTable* symbolTable)
 {
     if(root == NULL) return;
-    sym = NULL; //Reset temp symbol
+    sym = NULL; // Reset temp symbol
     switch (root->nodeType) 
     {
         case node_program:
@@ -159,12 +159,23 @@ void semanticAnalysis(Node* root, SymbolTable* symbolTable)
             else { semanticAnalysis(root->assignment.assignee, symbolTable); sym=lookupSymbol(symbolTable, currentScope, root->assignment.assignee->array_index.identifier); printSymbol(sym);}     
             if(sym == NULL && root->assignment.identifier != NULL) {
                 semerrorno++;
-                printf("Ln.%d. SEMANTIC ERROR: Undeclared variable reference : Variable %s not declared\n", root->lineno, root->assignment.identifier);
+                printf("Ln.%d. SEMANTIC ERROR: Undeclared variable reference 2 : Variable %s not declared\n", root->lineno, root->assignment.identifier);
             }
             semanticAnalysis(root->assignment.expr, symbolTable);
             break;
         case node_typekw:
+            printf("IN TYPE KW\n");
             break;
+        case node_array_index:
+            printf("IN ARRAY INDEX\n");
+            sym=lookupSymbol(symbolTable, currentScope, root->assignment.assignee->array_index.identifier);
+             if(sym == NULL && root->assignment.identifier != NULL) {
+                semerrorno++;
+                printf("Ln.%d. SEMANTIC ERROR: Undeclared variable reference : Variable %s not declared\n", root->lineno, root->assignment.identifier);
+            }
+            semanticAnalysis(root->assignment.expr, symbolTable);
+            break;
+            break; 
         case node_print_stmt:
             printf("IN PRINT STMT\n");
             semanticAnalysis(root->print_stmt.expr, symbolTable);
@@ -188,6 +199,7 @@ void semanticAnalysis(Node* root, SymbolTable* symbolTable)
                 lExprType = NULL;
                 rExprType = NULL;
             }
+            printTAC(generateTAC(root));
             break;
         case node_term:
         printf("IN TERM\n");
@@ -264,28 +276,24 @@ void semanticAnalysis(Node* root, SymbolTable* symbolTable)
 
 TAC* generateTAC(Node* node)
 {
-    if (node == NULL) return NULL;
-    TAC* instruction = (TAC*)malloc(sizeof(TAC));
-    if(!instruction) return NULL;
-
-    switch (node->nodeType)
+    if(node != NULL) 
     {
-    case node_expr:       
-        break;
-    case node_declaration:
-        break;
-    case node_assignment:
-        break;
-    case node_print_stmt:
-        break;
-    default:
-        free(instruction);
-        return NULL;
-    }
+        TAC* instr = NULL;
+        switch (NodeType)
+        {
+            case node_expr:
+                if (node->expr.left != NULL)
+                {
+                    printf("Generating TAC for L Expr");
+                    generateTAC(node->expr.left);
+                }
 
-    instruction->next = NULL;
-    //appendTAC(&tacHead, instruction);
-    return instruction;
+                break;
+            default:
+                printf("Unreconized node in TAC Generation\n");
+                break;
+        }    
+    }
 }
 
 int checkTypeCompatibility(const char* type1, const char* type2)
