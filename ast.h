@@ -40,7 +40,7 @@ int lineno;
 union {
     struct  {struct Node* stmt_list;} program;
     struct  {struct Node* stmt; struct Node* stmt_list;} stmt_list; 
-    struct  {struct Node* right;}stmt;
+    struct  {struct Node* right;} stmt;
                     // typekew node 
     struct  {struct Node* type; char* identifier;} declaration;
                     // Return type - typekw node        // func_params node 

@@ -1,7 +1,7 @@
 #include "semantic.h"
 #include <stdio.h>
 
-TAC* tacHead = NULL;
+TAC* tacHead;
 Node* temp_node;
 char* temp_string;
 Symbol* sym; // temp symbol pointer
@@ -10,6 +10,8 @@ char* rExprType;
 Symbol* currentScope;
 char* temp_dataType;
 char* temp_identifier;
+static Stack * operatorStack = NULL;
+static Stack * operandStack = NULL;
 
 void semanticAnalysis(Node* root, SymbolTable* symbolTable)
 {
@@ -22,7 +24,7 @@ void semanticAnalysis(Node* root, SymbolTable* symbolTable)
             semanticAnalysis(root->program.stmt_list, symbolTable);
             break; 
         case node_stmt_list:
-            if(root->stmt_list.stmt != NULL) 
+            if(root->stmt_list.stmt != NULL)
                 semanticAnalysis(root->stmt_list.stmt, symbolTable);
             if(root->stmt_list.stmt_list != NULL) 
                 semanticAnalysis(root->stmt_list.stmt_list, symbolTable);
@@ -199,7 +201,6 @@ void semanticAnalysis(Node* root, SymbolTable* symbolTable)
                 lExprType = NULL;
                 rExprType = NULL;
             }
-            printTAC(generateTAC(root));
             break;
         case node_term:
         printf("IN TERM\n");
@@ -276,21 +277,60 @@ void semanticAnalysis(Node* root, SymbolTable* symbolTable)
 
 TAC* generateTAC(Node* node)
 {
+    if (operatorStack == NULL) { operatorStack = createStack();}
+    if (operandStack == NULL) { operandStack = createStack();}
+    int counter = 0;
     if(node != NULL) 
     {
         TAC* instr = NULL;
-        switch (NodeType)
+        switch (node->nodeType)
         {
             case node_expr:
                 if (node->expr.left != NULL)
                 {
-                    printf("Generating TAC for L Expr");
+                    printf("Generating TAC for L Expr\n");
+                        if (node->expr.operator != NULL)
+                    {
+                        push(operatorStack, node->expr.operator);
+                        printf("Pushed operator\n");
+                    }
                     generateTAC(node->expr.left);
+                } 
+                if(!isEmpty(operatorStack) && stackSize(operandStack) >= 0)
+                {
+                    char* op = pop(operatorStack);
+                    char* operand2 = pop(operandStack);
+                    char* operand1 = pop(operandStack);
+                    TAC* instr = createTAC(op, operand1, operand2);
+                    printTAC(instr);
+                    push(operandStack, instr->result); 
+                }
+                if (node->expr.right != NULL)
+                {
+                    printf("Generating TAC for R Expr\n");
+                        if (node->expr.operator != NULL)
+                    {
+                        push(operatorStack, node->expr.operator);
+                    }
+                    generateTAC(node->expr.right);
                 }
 
+                
+                break;
+            case node_term:
+                printf("Generating TAC for term->factor\n");
+                generateTAC(node->term.factor);
+                break;
+            case node_factor:
+                printf("Generating TAC for factor->number\n");
+                generateTAC(node->factor.number);
+                break;
+            case node_number:
+                printf("Terminal : number Value: %s\n", node->number.value);
+                push(operandStack, node->number.value);
                 break;
             default:
-                printf("Unreconized node in TAC Generation\n");
+                printf("Unrecognized node in TAC Generation\n");
                 break;
         }    
     }
@@ -302,3 +342,76 @@ int checkTypeCompatibility(const char* type1, const char* type2)
     else {return 0;} 
 }
 
+Stack* createStack()
+{
+    Stack* stack = (Stack*)malloc(sizeof(Stack));
+    if (stack == NULL) {
+        fprintf(stderr, "Memory allocation failed\n");
+        exit(1);  // Exit if memory allocation fails
+    }
+    stack->top = -1;
+    return stack;
+}
+
+void push (Stack* stack, char* value)
+{
+    if (stack->top < 99)
+    {
+        stack->data[++stack->top] = value;
+    }
+}
+
+char* pop(Stack* stack) {
+    
+    if (stack->top >= 0) {
+        char* value = stack->data[stack->top];  // Retrieve the top element
+        stack->data[stack->top] = NULL;          // Clear the reference
+        stack->top--;                            // Move the top pointer down
+        return value;
+    }
+    return NULL;  // Return NULL if the stack is empty
+}
+
+
+int isEmpty(Stack* stack)
+{
+    return stack->top == -1;
+}
+
+int stackSize(Stack* stack) {
+    return stack->top + 1;  // top is -1 when empty, so adding 1 gives the count
+}
+
+TAC* createTAC(char* op, char* arg1, char* arg2) {
+    TAC* instr = (TAC*)malloc(sizeof(TAC));
+    if (!instr) {
+        fprintf(stderr, "Memory allocation failed\n");
+        exit(1);  // Exit if memory allocation fails
+    }
+
+    instr->op = op;
+    instr->arg1 = arg1;
+    instr->arg2 = arg2;
+    instr->result = NULL;  // Update with a unique temp name or result as required
+    instr->next = NULL;
+
+    // Insert at head if tacHead is NULL
+    if (tacHead == NULL) {
+        tacHead = instr;
+    } else {
+        // Append to the end of the list
+        TAC* temp = tacHead;
+        while (temp->next != NULL) {
+            temp = temp->next;
+        }
+        temp->next = instr;
+    }
+
+    return instr;
+}
+
+void printTAC(TAC* tac)
+{
+    printf("____________________________________");
+    printf("Result : T1\n Op: %s \n Arg 1: %s, Arg 2: %s \n", tac->op, tac->arg1, tac->arg2);
+}

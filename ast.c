@@ -264,13 +264,11 @@ void traverseAST(Node* root, int depth, const char* direction) {
             }
             if(root->expr.left != NULL)
             {
-                printf("Entering Expr L"); 
                 traverseAST(root->expr.left, depth + 1, "↙");
             }
             else structure(depth + 1, "| L Empty \n");
             if (root->expr.right != NULL) 
             {
-                printf("Entering Expr R");
                 traverseAST(root->expr.right, depth + 1, "↘");
             }
             else structure(depth + 1, "| R Empty \n");

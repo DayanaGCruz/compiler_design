@@ -35,3 +35,4 @@ $(LEX_OUTPUT): $(FLEX_SRC) $(BISON_HEADER) $(AST_HEADER) $(SYMBOLTABLE_HEADER) $
 clean:
 	@echo Refreshing environment...
 	rm -f $(EXEC) $(BISON_OUTPUT) $(BISON_HEADER) $(LEX_OUTPUT)
+	clear

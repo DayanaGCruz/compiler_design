@@ -328,11 +328,6 @@ expr: term
 		$$ = createNode(node_expr);
 		$$->expr.left = $1;
 		$$->lineno = yylineno;
-expr: term 
-	{
-		$$ = createNode(node_expr);
-		$$->expr.left = $1;
-		$$->lineno = yylineno;
 	}
 	| expr MINUS term 
 	{
