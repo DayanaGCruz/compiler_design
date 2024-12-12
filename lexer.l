@@ -157,7 +157,7 @@ COMA		","
 		printf("Ln.%d : LEXER : CLOSING BRACKET: %s\n", yylineno, yytext);
 		return RBRACKET;
 }
-[A-z0-9\_\-\.]* { //Digits, hyphens, and letters NOT INT FLOAT KEYWORD or IDENTIFIER generate generic lexical error messages
+[A-Za-z0-9\_\-\.]* { //Digits, hyphens, and letters NOT INT FLOAT KEYWORD or IDENTIFIER generate generic lexical error messages
 		yyerror("LEXER : Lexical Error: Illegal Identifier", 0);
 		}
 . 		{ // Symbols not included in grammar generate lexical error messages - illegal symbol

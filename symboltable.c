@@ -3,6 +3,13 @@
 #include <string.h>
 #include "symboltable.h"
 
+#define BOLD "\x1B[1m"
+#define RESET "\x1B[0m"
+#define BLUE "\x1b[34m"
+#define PINK "\x1b[35m"
+#define GREEN "\x1b[32m"
+#define YELLOW "\x1b[33m"
+
 DataType getSymbolType(const char* dataType)
 {
     if(strcmp(dataType, "int") == 0)
@@ -84,7 +91,7 @@ static unsigned int hash(const char* str, int size)
 }
 */
 
-static unsigned int scopeHash(const char* identifier, Symbol* parentScope, int size)
+static unsigned int scopeHash(const char* identifier, const Symbol* parentScope, int size)
 {
     unsigned int hash = 0;
     while(*identifier)
@@ -143,7 +150,7 @@ void printSymbolTable(SymbolTable* table)
     // Table header
     printf("|| SYMBOL TABLE ||\n");
     printf("=======================================================================================================================================================================================================\n");
-    printf("| %-30s | %-50s | %-30s | %-30s | %-30s | %-10s |\n", 
+    printf( "| %-30s | %-50s | %-30s | %-30s | %-30s | %-10s |\n", 
            "Type", "Parent Scope", "Scope Type", "Data Type", "Identifier", "Line No.");
     printf("=======================================================================================================================================================================================================\n");
 

@@ -62,9 +62,10 @@ union {
     struct  {char* operator; struct Node* term; struct Node* factor;} term;
     struct  {struct Node* expr; struct Node* number; char* identifier;} factor;
             // int or float 
-    struct  {struct Node* type; char* value; } number;
+    // FIXME - change value type to kw from? 
+    struct  {char* type; char* value; } number;
     struct {struct Node* decl; struct Node* size; } array_decl;
-    struct {struct Node* expr_list;} array_def;
+    struct { union {struct Node* array_decl; char* identifier; }; struct Node* expr_list;} array_def;
     struct {struct Node* expr; struct Node* expr_list; } expr_list;
     struct {struct Node* type; char* identifier; struct Node* index; } array_index;
     struct {struct Node* expr;} return_stmt;

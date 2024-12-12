@@ -1,7 +1,9 @@
 #include "ast.h"
 #include <stdio.h>
 #include <stdlib.h>
-
+#define RED "\x1B[31m"
+#define RESET "\x1B[0m"
+#define BOLD "\x1B[1m"
 void structure(int depth, const char* direction) 
 {
     // Print indentation for structure based on tree depth
@@ -36,6 +38,8 @@ const char* getNodeTypeString(NodeType type) {
         case node_term: return "Term";
         case node_factor: return "Factor";
         case node_number: return "Number";
+        case node_array_def: return "Array Definition";
+        case node_expr_list: return "Expression List";
         case node_return_stmt: return "Return Statement";
         default: return "unknown";
     }
@@ -46,7 +50,7 @@ Node* createNode(NodeType nodeType)
 {
     Node* node = (Node*)malloc(sizeof(Node));
     node->nodeType = nodeType;  // Set node type
-    int lineno = NULL;
+    int lineno = 0;
     // Initialize the attributes for each node type 
     switch (nodeType) {
         case node_program:
@@ -110,7 +114,7 @@ Node* createNode(NodeType nodeType)
             node->print_stmt.expr = NULL;
             break;
         case node_expr:
-            node->expr.operator = '\0'; 
+            node->expr.operator = NULL; 
             node->expr.left = NULL;
             node->expr.right = NULL;
             break;
@@ -133,6 +137,8 @@ Node* createNode(NodeType nodeType)
             node->array_decl.size = NULL;
             break;
         case node_array_def:
+            node->array_def.array_decl = NULL;
+            node->array_def.identifier = NULL;
             node->array_def.expr_list = NULL;
             break;
         case node_expr_list:
@@ -162,7 +168,7 @@ void traverseAST(Node* root, int depth, const char* direction) {
     
     switch (root->nodeType) {
         case node_program:
-            printf("\n|| ABSTRACT SYNTAX TREE (AST) <~> PARSE TREE ||\n\n");
+            printf(RED BOLD "\nABSTRACT SYNTAX TREE (AST) <~> PARSE TREE\n\n" RESET);
             printf("%s\n", getNodeTypeString(root->nodeType));
             traverseAST(root->program.stmt_list, depth + 1, "↘");
             break;

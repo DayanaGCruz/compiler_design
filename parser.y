@@ -69,64 +69,41 @@ stmt_list: stmt stmt_list
 		$$->lineno = yylineno; 
 	}
 	;
-stmt: var_decl SEMICOLON
-	{
-		$$ = createNode(node_stmt);
-		$$->stmt.right = $1;
-		$$->lineno = yylineno;
-	}
-	| func_def 
-	{
-		$$ = createNode(node_stmt);
-		$$->stmt.right = $1;
-		$$->lineno = yylineno;
-	}
-	| func_decl
-	{
-		$$ = createNode(node_stmt);
-		$$->stmt.right = $1;
-		$$->lineno = yylineno;
-	}
-	| func_call 
-	{
-		$$ = createNode(node_stmt);
-		$$->stmt.right = $1;
-		$$->lineno = yylineno;
-	}
-	| array_decl
-	{
-		$$ = createNode(node_stmt);
-		$$->stmt.right = $1;
-		$$->lineno = yylineno;
-	}
-	| assignment  
-	{
-		$$ = createNode(node_stmt);
-		$$->stmt.right = $1;
-		$$->lineno = yylineno;
-	}
-	| print_stmt 
-	{
-		$$ = createNode(node_stmt);
-		$$->stmt.right = $1;
-		$$->lineno = yylineno;
-	}
-	| expr SEMICOLON 
-	{
-		$$ = createNode(node_stmt);
-		$$->stmt.right = $1;
-		$$->lineno = yylineno;
-	}
-	| return_stmt 
-	{
-		$$ = createNode(node_stmt);
-		$$->stmt.right = $1;
-		$$->lineno = yylineno;
-	}
-	| expr error {syntaxerrorno++; printf("Ln.%d : SYNTAX ERROR : MISSING SEMICOLON\n", lnolastid);}
-	;
+stmt:
+    var_decl SEMICOLON
+    | func_def
+    | func_decl
+    | func_call
+	| array_def 
+    | array_decl SEMICOLON
+    | assignment
+    | print_stmt
+    | expr SEMICOLON
+    | return_stmt
+    {
+        $$ = createNode(node_stmt);
+        $$->stmt.right = $1;
+        $$->lineno = yylineno;
+    }
+    ;
 
-array_decl: declaration LBRACKET expr RBRACKET SEMICOLON
+array_def: array_decl ASSIGN LCURLY expr_list RCURLY SEMICOLON
+	{
+		printf("Found array definition\n");
+		$$ = createNode(node_array_def);
+		$$->array_def.array_decl = $1;
+		$$->array_def.expr_list = $4;
+		$$->lineno = yylineno; 
+	}
+	| IDENTIFIER ASSIGN expr_list SEMICOLON
+	{
+		$$ = createNode(node_array_def);
+		$$->array_def.identifier = $1;
+		$$->array_def.expr_list = $3;
+		$$->lineno = yylineno;
+	}
+	;
+array_decl: declaration LBRACKET expr RBRACKET 
 {
 	printf("Found array decl\n");
 	$$ = createNode(node_array_decl);
@@ -136,6 +113,20 @@ array_decl: declaration LBRACKET expr RBRACKET SEMICOLON
 }
 ;
 
+expr_list: expr_list COMA expr
+	{
+		$$ = createNode(node_expr_list);
+		$$->expr_list.expr = $3;
+		$$->expr_list.expr_list = $1;
+		$$->lineno = yylineno;
+	}
+	| expr
+	{
+		$$ = createNode(node_expr_list);
+		$$->expr_list.expr_list = $1;
+		$$->lineno = yylineno;
+	}
+	;
 declaration: type IDENTIFIER
 	{
 		printf("PARSER : Found  declaration\n");
@@ -325,11 +316,14 @@ return_stmt: RETURNKW expr SEMICOLON
 
 expr: term 
 	{
+		/*
 		$$ = createNode(node_expr);
 		$$->expr.left = $1;
+		*/
+		$$ = $1;
 		$$->lineno = yylineno;
 	}
-	| expr MINUS term 
+	| expr MINUS expr
 	{
 		printf("PARSER : Found  subtraction expression\n");
 		$$ = createNode(node_expr);
@@ -338,7 +332,7 @@ expr: term
 		$$->expr.right = $3;
 		$$->lineno = yylineno;
 	}
-	| expr PLUS term 
+	| expr PLUS expr 
 	{
 		printf("PARSER : Found  addition expression\n");
 		$$ = createNode(node_expr);
@@ -355,7 +349,7 @@ expr: term
 	{
 		printf("PARSER : Found  array_index expression\n");
 		$$ = createNode(node_expr);
-		$$->expr.right = $1;
+		$$->expr.left = $1;
 		$$->lineno = yylineno;
 	}	
 	;
@@ -391,8 +385,11 @@ term: term DIV factor
 	| factor 
 	{
 		printf("PARSER : Found  factor\n"); 
-		$$ = createNode(node_term); 
+		
+		/*$$ = createNode(node_term); 
 		$$->term.factor = $1;
+		*/
+		$$ = $1;
 		$$->lineno = yylineno;
 	}
 	| error DIV factor {syntaxerrorno++; printf("Ln.%d : SYNTAX ERROR : Missing term in expression\n", yylineno);}

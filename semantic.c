@@ -1,6 +1,9 @@
 #include "semantic.h"
 #include <stdio.h>
 
+#define RED "\x1B[31m"
+#define RESET "\x1B[0m"
+#define BOLD "\x1B[1m"
 TAC* tacHead;
 Node* temp_node;
 char* temp_string;
@@ -12,7 +15,8 @@ char* temp_dataType;
 char* temp_identifier;
 static Stack * operatorStack = NULL;
 static Stack * operandStack = NULL;
-
+static Stack * operandTypeStack = NULL;
+int counter = 1;
 void semanticAnalysis(Node* root, SymbolTable* symbolTable)
 {
     if(root == NULL) return;
@@ -20,7 +24,9 @@ void semanticAnalysis(Node* root, SymbolTable* symbolTable)
     switch (root->nodeType) 
     {
         case node_program:
-            printf("SEMANTIC ANALYSIS\n");
+            generateTAC(root);
+            printf(RED BOLD "\nSEMANTIC ANALYSIS\n\n" RESET);
+            if(tacHead != NULL) {printAllTAC(tacHead);}
             semanticAnalysis(root->program.stmt_list, symbolTable);
             break; 
         case node_stmt_list:
@@ -28,7 +34,7 @@ void semanticAnalysis(Node* root, SymbolTable* symbolTable)
                 semanticAnalysis(root->stmt_list.stmt, symbolTable);
             if(root->stmt_list.stmt_list != NULL) 
                 semanticAnalysis(root->stmt_list.stmt_list, symbolTable);
-            break;
+            break; 
         case node_stmt:
             printf("IN STMT\n");
             if(root->stmt.right != NULL)
@@ -38,16 +44,16 @@ void semanticAnalysis(Node* root, SymbolTable* symbolTable)
             printf("IN DECLARATION\n");
             sym = lookupSymbol(symbolTable,  currentScope, root->declaration.identifier);
             printf("IDENTIFIER: %s\n", root->declaration.identifier);
-            printf(sym->identifier);
-            if(sym != NULL) {
+            if(sym != NULL) 
+            {
                 semerrorno++;
-                if(root->lineno != NULL && root->declaration.identifier != NULL && sym->lineno != NULL)
+                if(root->declaration.identifier != NULL)
                 {
                     printf("Ln.%d : SEMANTIC ERROR: Duplicate variable declaration : Identifier %s already declared on line %d\n", root->lineno ,root->declaration.identifier, sym->lineno);
                 }    
             } else {
                 printf("INSERTING SYMBOL\n");
-                if(root->declaration.type->typekw.type != NULL && root->declaration.identifier != NULL && root->lineno != NULL) 
+                if(root->declaration.type->typekw.type != NULL && root->declaration.identifier != NULL) 
                 {
                     insertSymbol(symbolTable, currentScope, root->declaration.identifier, root->declaration.type->typekw.type, decl_var, root->lineno);
                 }
@@ -64,7 +70,7 @@ void semanticAnalysis(Node* root, SymbolTable* symbolTable)
                 if(sym->scope == local && sym->parent_scope->identifier == currentScope->parent_scope->identifier)
                 {
                     semerrorno++;
-                    if(root->lineno != NULL && temp_identifier != NULL && sym->lineno != NULL)
+                    if(temp_identifier != NULL)
                     {
                         printf("Ln.%d : SEMANTIC ERROR: Duplicate function declaration : Identifier %s already declared on line %d\n", root->lineno ,temp_identifier, sym->lineno);
                         
@@ -72,12 +78,11 @@ void semanticAnalysis(Node* root, SymbolTable* symbolTable)
                 }
             } else 
             {
-                if(temp_dataType != NULL && temp_identifier != NULL && root->lineno != NULL) 
+                if(temp_dataType != NULL && temp_identifier != NULL) 
                 {
                     insertSymbol(symbolTable, currentScope, temp_identifier, temp_dataType, decl_func, root->lineno);
                 }
                 currentScope = lookupSymbol(symbolTable, currentScope, temp_identifier);
-                semanticAnalysis(root->func_decl.decl, symbolTable);
                 semanticAnalysis(root->func_decl.params, symbolTable);
                 currentScope = NULL;
                 printf("CURRENT SCOPE CHECK2: %s\n", currentScope->identifier);
@@ -104,13 +109,13 @@ void semanticAnalysis(Node* root, SymbolTable* symbolTable)
                 if(sym->parent_scope->identifier != currentScope->identifier)
                 {
                     semerrorno++;
-                    if(root->lineno != NULL && root->param.identifier != NULL && sym->lineno != NULL)
+                    if(root->param.identifier != NULL)
                     {
                         printf("Ln.%d : SEMANTIC ERROR: Duplicate parameter declaration : Identifier %s already declared on line %d\n", root->lineno ,root->param.identifier, sym->lineno);
                     }   
                 } 
             } else {
-                if(root->param.type->typekw.type != NULL && root->param.identifier != NULL && root->lineno != NULL) 
+                if(root->param.type->typekw.type != NULL && root->param.identifier != NULL) 
                 {
                     insertSymbol(symbolTable,  currentScope, root->param.identifier, root->param.type->typekw.type, decl_param, root->lineno);
                 }
@@ -150,7 +155,6 @@ void semanticAnalysis(Node* root, SymbolTable* symbolTable)
                 insertSymbol(symbolTable, currentScope, temp_identifier, temp_dataType, decl_func, root->lineno);
             } 
             currentScope = lookupSymbol(symbolTable, currentScope, temp_identifier);
-            semanticAnalysis(root->func_def.decl, symbolTable);
             semanticAnalysis(root->func_def.params, symbolTable);
             semanticAnalysis(root->func_def.stmt_list, symbolTable);
             currentScope = NULL;
@@ -158,11 +162,11 @@ void semanticAnalysis(Node* root, SymbolTable* symbolTable)
         case node_assignment:
             printf("IN ASSIGNMENT\n");
             if(root->assignment.identifier != NULL) {sym = lookupSymbol(symbolTable,  currentScope, root->assignment.identifier) ;}          
-            else { semanticAnalysis(root->assignment.assignee, symbolTable); sym=lookupSymbol(symbolTable, currentScope, root->assignment.assignee->array_index.identifier); printSymbol(sym);}     
+            else { semanticAnalysis(root->assignment.assignee, symbolTable); sym=lookupSymbol(symbolTable, currentScope, root->assignment.assignee->array_index.identifier);}     
             if(sym == NULL && root->assignment.identifier != NULL) {
                 semerrorno++;
                 printf("Ln.%d. SEMANTIC ERROR: Undeclared variable reference 2 : Variable %s not declared\n", root->lineno, root->assignment.identifier);
-            }
+            } else { lExprType = getSymbolTypeString(sym->dataType); }
             semanticAnalysis(root->assignment.expr, symbolTable);
             break;
         case node_typekw:
@@ -170,10 +174,20 @@ void semanticAnalysis(Node* root, SymbolTable* symbolTable)
             break;
         case node_array_index:
             printf("IN ARRAY INDEX\n");
-            sym=lookupSymbol(symbolTable, currentScope, root->assignment.assignee->array_index.identifier);
+            sym=lookupSymbol(symbolTable, currentScope, root->array_index.identifier);
              if(sym == NULL && root->assignment.identifier != NULL) {
                 semerrorno++;
                 printf("Ln.%d. SEMANTIC ERROR: Undeclared variable reference : Variable %s not declared\n", root->lineno, root->assignment.identifier);
+            } else {
+                if(lExprType == NULL)
+                    {
+                        lExprType = getSymbolTypeString(sym->dataType);
+                        printf("L TYPE: %s\n", lExprType);
+                    }
+                    else if(rExprType == NULL) {
+                        rExprType = getSymbolTypeString(sym->dataType);
+                        printf("R TYPE: %s\n", rExprType);
+                    }
             }
             semanticAnalysis(root->assignment.expr, symbolTable);
             break;
@@ -183,7 +197,6 @@ void semanticAnalysis(Node* root, SymbolTable* symbolTable)
             semanticAnalysis(root->print_stmt.expr, symbolTable);
             break;
         case node_expr:
-            printf("IN EXPR\n");
             if(root->expr.left != NULL) 
             {
                 semanticAnalysis(root->expr.left, symbolTable);
@@ -191,15 +204,32 @@ void semanticAnalysis(Node* root, SymbolTable* symbolTable)
             if (root->expr.right != NULL) {
                 semanticAnalysis(root->expr.right, symbolTable);
             }
-            if(root->expr.left != NULL && root->expr.right != NULL) {
+            if(root->expr.left != NULL && root->expr.right != NULL && lExprType != NULL && rExprType != NULL) { // Waiting for both expressions to be filled.
                 printf("LEFT TYPE: %s\n", lExprType);
                 printf("RIGHT TYPE: %s\n", rExprType);
                 if(!checkTypeCompatibility(lExprType, rExprType)) {
                     semerrorno++;
                     printf("Ln.%d SEMANTIC ERROR: Type mismatch : Incompatible types %s and %s\n", root->lineno, lExprType, rExprType);
                 }
-                lExprType = NULL;
-                rExprType = NULL;
+                else 
+                {
+                    lExprType = lExprType; // Reset the types
+                    rExprType = NULL;
+                }
+            } // Assignment types
+            else if(root->expr.right == NULL && lExprType != NULL && rExprType != NULL)
+            {
+                printf("LEFT TYPE: %s\n", lExprType);
+                printf("RIGHT TYPE: %s\n", rExprType);
+                if(!checkTypeCompatibility(lExprType, rExprType)) {
+                    semerrorno++;
+                    printf("Ln.%d SEMANTIC ERROR: Type mismatch : Incompatible types %s and %s\n", root->lineno, lExprType, rExprType);
+                }
+                else 
+                {
+                    lExprType = lExprType; // Reset the types
+                    rExprType = NULL;
+                }
             }
             break;
         case node_term:
@@ -224,9 +254,11 @@ void semanticAnalysis(Node* root, SymbolTable* symbolTable)
                     if(lExprType == NULL)
                     {
                         lExprType = getSymbolTypeString(sym->dataType);
+                        printf("L TYPE: %s\n", lExprType);
                     }
                     else if(rExprType == NULL) {
                         rExprType = getSymbolTypeString(sym->dataType);
+                        printf("R TYPE: %s\n", rExprType);
                     }
                 }
             }
@@ -248,8 +280,8 @@ void semanticAnalysis(Node* root, SymbolTable* symbolTable)
                 }
                 else if(rExprType == NULL) {
                     rExprType = root->number.type;
-                    
                 }
+            insertSymbol(symbolTable, currentScope, root->number.value, root->number.type, decl_const, root->lineno);
             break;
         case node_array_decl:
             printf("IN ARRAY DECL\n");
@@ -258,16 +290,28 @@ void semanticAnalysis(Node* root, SymbolTable* symbolTable)
             sym = lookupSymbol(symbolTable,  currentScope, temp_identifier);
             if(sym != NULL) {
                 semerrorno++;
-                if(root->lineno != NULL && temp_identifier != NULL && sym->lineno != NULL)
+                if(temp_identifier != NULL)
                 {
                     printf("Ln.%d : SEMANTIC ERROR: Duplicate array declaration : Identifier %s already declared on line %d\n", root->lineno ,temp_identifier, sym->lineno);
                 }    
             } else {
-                if(temp_dataType != NULL && temp_identifier != NULL && root->lineno != NULL) 
+                if(temp_dataType != NULL && temp_identifier != NULL) 
                 {
                     insertSymbol(symbolTable, currentScope, temp_identifier, temp_dataType, decl_var, root->lineno);
                 }
             }
+            break;
+        case node_array_def:
+            printf("IN ARRAY DEF\n");
+            if(root->array_def.array_decl != NULL) 
+                semanticAnalysis(root->array_def.array_decl, symbolTable);
+            semanticAnalysis(root->array_def.expr_list, symbolTable);
+            break;
+        case node_expr_list:
+            semanticAnalysis(root->expr_list.expr, symbolTable);
+            if(root->expr_list.expr_list != NULL) 
+                semanticAnalysis(root->expr_list.expr_list, symbolTable);
+            break;
         default:
             printf("Unknown Node\n");
             break;
@@ -275,58 +319,200 @@ void semanticAnalysis(Node* root, SymbolTable* symbolTable)
 
 }
 
+
 TAC* generateTAC(Node* node)
 {
     if (operatorStack == NULL) { operatorStack = createStack();}
     if (operandStack == NULL) { operandStack = createStack();}
-    int counter = 0;
     if(node != NULL) 
     {
         TAC* instr = NULL;
         switch (node->nodeType)
         {
-            case node_expr:
-                if (node->expr.left != NULL)
+            case node_program:
+                generateTAC(node->program.stmt_list);
+                break;
+            case node_stmt_list:
+                if(node->stmt_list.stmt != NULL)
                 {
-                    printf("Generating TAC for L Expr\n");
-                        if (node->expr.operator != NULL)
-                    {
-                        push(operatorStack, node->expr.operator);
-                        printf("Pushed operator\n");
-                    }
-                    generateTAC(node->expr.left);
+                    generateTAC(node->stmt_list.stmt);
+                }
+                if(node->stmt_list.stmt_list != NULL)
+                {
+                    generateTAC(node->stmt_list.stmt_list);
+                }
+                break;
+            case node_stmt:
+                if(node->stmt.right != NULL)
+                {
+                    generateTAC(node->stmt.right);
                 } 
-                if(!isEmpty(operatorStack) && stackSize(operandStack) >= 0)
+                break;
+            case node_declaration:
+                if(node->declaration.type != NULL)
+                {
+                    generateTAC(node->declaration.type);
+                }
+                break;
+            case node_func_decl:
+                if(node->func_decl.decl != NULL)
+                {
+                    generateTAC(node->func_decl.decl);
+                }
+                if(node->func_decl.params != NULL)
+                {
+                    generateTAC(node->func_decl.params);
+                }
+                break;
+            case node_func_params:
+                if(node->func_params.param_list != NULL)
+                {
+                    generateTAC(node->func_params.param_list);
+                }
+                break;
+            case node_param_list:
+                if(node->param_list.param != NULL)
+                {
+                    generateTAC(node->param_list.param);
+                }
+                if(node->param_list.param_list != NULL)
+                {
+                    generateTAC(node->param_list.param_list);
+                }
+                break;
+            case node_param:
+                if(node->param.type != NULL)
+                {
+                    generateTAC(node->param.type);
+                }
+                break;
+            case node_func_call:
+                if(node->func_call.args != NULL)
+                {
+                    generateTAC(node->func_call.args);
+                }
+                break;
+            case node_func_args:
+                if(node->func_args.arg_list != NULL)
+                {
+                    generateTAC(node->func_args.arg_list);
+                }
+                break;
+            case node_arg_list:
+                if(node->arg_list.arg != NULL)
+                {
+                    generateTAC(node->arg_list.arg);
+                }
+                if(node->arg_list.arg_list != NULL)
+                {
+                    generateTAC(node->arg_list.arg_list);
+                }
+                break;
+            case node_arg:
+                if(node->arg.expr != NULL)
+                {
+                    generateTAC(node->arg.expr);
+                }
+                break;
+            case node_func_def:
+                if(node->func_def.decl != NULL)
+                {
+                    generateTAC(node->func_def.decl);
+                }
+                if(node->func_def.params != NULL)
+                {
+                    generateTAC(node->func_def.params);
+                }
+                if(node->func_def.stmt_list != NULL)
+                {
+                    generateTAC(node->func_def.stmt_list);
+                }
+                break;
+            case node_assignment:
+                if(node->assignment.assignee != NULL)
+                {
+                    generateTAC(node->assignment.assignee);
+                }
+                if(node->assignment.expr != NULL)
+                {
+                    generateTAC(node->assignment.expr);
+                }
+                break;
+            case node_typekw:
+                break;
+            case node_array_index:
+                if(node->array_index.identifier != NULL)
+                {
+                    generateTAC(node->array_index.identifier);
+                }
+                break;
+            case node_print_stmt:
+                if(node->print_stmt.expr != NULL)
+                {
+                    generateTAC(node->print_stmt.expr);
+                }
+                break;
+            case node_expr_list:
+                if(node->expr_list.expr != NULL)
+                {
+                    generateTAC(node->expr_list.expr);
+                }
+                if(node->expr_list.expr_list != NULL)
+                {
+                    generateTAC(node->expr_list.expr_list);
+                }
+                break;
+            case node_expr:
+            
+               printf("IN EXPR\n");
+               
+               if (node->expr.operator != NULL)
+                {
+                    printf("Operator: %s\n", node->expr.operator);
+                    push(operatorStack, node->expr.operator);
+                }
+                
+                                 
+                if(node->expr.left != NULL)
+                {
+                    generateTAC(node->expr.left);
+                }
+
+                
+                if(node->expr.right != NULL)
+                {
+                    generateTAC(node->expr.right);
+                }
+                
+                while(!isEmpty(operatorStack) && stackSize(operandStack) >= 2)
                 {
                     char* op = pop(operatorStack);
                     char* operand2 = pop(operandStack);
                     char* operand1 = pop(operandStack);
-                    TAC* instr = createTAC(op, operand1, operand2);
-                    printTAC(instr);
-                    push(operandStack, instr->result); 
+                    TAC* instr = createTAC( op, operand1, operand2);
+                    push(operandStack, instr->label);
+                    printf("Result: %s\n", instr->label);
+                    counter++;
                 }
-                if (node->expr.right != NULL)
-                {
-                    printf("Generating TAC for R Expr\n");
-                        if (node->expr.operator != NULL)
-                    {
-                        push(operatorStack, node->expr.operator);
-                    }
-                    generateTAC(node->expr.right);
-                }
-
                 
                 break;
             case node_term:
-                printf("Generating TAC for term->factor\n");
+                
+                if (node->term.operator != NULL)
+                {
+                    push(operatorStack, node->term.operator);
+                    printf("Operator: %s\n", node->term.operator);
+                }
                 generateTAC(node->term.factor);
+                generateTAC(node->term.term);
                 break;
             case node_factor:
-                printf("Generating TAC for factor->number\n");
                 generateTAC(node->factor.number);
+                generateTAC(node->factor.expr);
+                generateTAC(node->factor.identifier);
                 break;
             case node_number:
-                printf("Terminal : number Value: %s\n", node->number.value);
+                printf("Value: %s\n", node->number.value);
                 push(operandStack, node->number.value);
                 break;
             default:
@@ -338,6 +524,11 @@ TAC* generateTAC(Node* node)
 
 int checkTypeCompatibility(const char* type1, const char* type2)
 {
+    if (type1 == NULL || type2 == NULL)
+    {
+        printf("%s", "Type is NULL\n");
+        return 0;
+    }
     if (strcmp(type1, type2) == 0) return 1; 
     else {return 0;} 
 }
@@ -363,7 +554,7 @@ void push (Stack* stack, char* value)
 
 char* pop(Stack* stack) {
     
-    if (stack->top >= 0) {
+    if (stack->top >= 0) { 
         char* value = stack->data[stack->top];  // Retrieve the top element
         stack->data[stack->top] = NULL;          // Clear the reference
         stack->top--;                            // Move the top pointer down
@@ -382,7 +573,8 @@ int stackSize(Stack* stack) {
     return stack->top + 1;  // top is -1 when empty, so adding 1 gives the count
 }
 
-TAC* createTAC(char* op, char* arg1, char* arg2) {
+TAC* createTAC( char* op, char* arg1, char* arg2) {
+    char buffer[30];
     TAC* instr = (TAC*)malloc(sizeof(TAC));
     if (!instr) {
         fprintf(stderr, "Memory allocation failed\n");
@@ -392,7 +584,9 @@ TAC* createTAC(char* op, char* arg1, char* arg2) {
     instr->op = op;
     instr->arg1 = arg1;
     instr->arg2 = arg2;
-    instr->result = NULL;  // Update with a unique temp name or result as required
+    sprintf(buffer, "T%d", counter);
+    instr->label = strdup(buffer);
+    instr->result = NULL;
     instr->next = NULL;
 
     // Insert at head if tacHead is NULL
@@ -406,12 +600,43 @@ TAC* createTAC(char* op, char* arg1, char* arg2) {
         }
         temp->next = instr;
     }
-
+    
     return instr;
 }
 
+
 void printTAC(TAC* tac)
 {
-    printf("____________________________________");
-    printf("Result : T1\n Op: %s \n Arg 1: %s, Arg 2: %s \n", tac->op, tac->arg1, tac->arg2);
+    printf(" = %s %s %s\n", tac->op, tac->arg1, tac->arg2);
+}
+
+void printAllTAC(TAC* head) {
+    TAC* current = head;
+    while (current != NULL) {
+        printf("%s = %s %s %s\n", 
+            current->result != NULL ? current->result : current->label, 
+            current->arg1, 
+            current->op, 
+            current->arg2);
+        current = current->next;
+    }
+}
+
+char* PerformOp(char* op, char* arg1, char* arg2)
+{
+    /*
+    if (op == '+')
+    {
+        return arg1 + arg2;
+    } else if (op == '-')
+    {
+        return arg1 - arg2;
+    } else if (op == '*')
+    {
+        return arg1 * arg2;
+    } else if (op == '/')
+    {
+        return arg1 / arg2;
+    } 
+    */
 }
