@@ -496,7 +496,7 @@ union yyalloc
 /* YYFINAL -- State number of the termination state.  */
 #define YYFINAL  42
 /* YYLAST -- Last index in YYTABLE.  */
-#define YYLAST   205
+#define YYLAST   191
 
 /* YYNTOKENS -- Number of terminals.  */
 #define YYNTOKENS  23
@@ -505,7 +505,7 @@ union yyalloc
 /* YYNRULES -- Number of rules.  */
 #define YYNRULES  67
 /* YYNSTATES -- Number of states.  */
-#define YYNSTATES  121
+#define YYNSTATES  123
 
 /* YYMAXUTOK -- Last valid token kind.  */
 #define YYMAXUTOK   277
@@ -556,13 +556,13 @@ static const yytype_int8 yytranslate[] =
 /* YYRLINE[YYN] -- Source line where rule number YYN was defined.  */
 static const yytype_int16 yyrline[] =
 {
-       0,    48,    48,    58,    67,    73,    74,    75,    76,    77,
-      78,    79,    80,    81,    82,    90,    98,   106,   116,   123,
-     130,   140,   143,   153,   162,   170,   176,   184,   193,   202,
-     211,   219,   225,   234,   243,   251,   257,   264,   272,   280,
-     281,   282,   291,   298,   305,   306,   308,   317,   326,   335,
-     344,   345,   346,   347,   348,   357,   366,   376,   385,   395,
-     396,   397,   398,   400,   407,   414,   421,   429
+       0,    51,    51,    61,    70,    76,    77,    78,    79,    80,
+      81,    82,    83,    84,    85,    93,   101,   109,   119,   126,
+     133,   143,   146,   156,   165,   173,   179,   187,   196,   205,
+     214,   222,   228,   237,   246,   254,   260,   267,   275,   283,
+     284,   285,   294,   301,   308,   309,   311,   320,   329,   338,
+     343,   344,   345,   346,   347,   356,   365,   375,   384,   390,
+     391,   392,   393,   395,   402,   409,   416,   424
 };
 #endif
 
@@ -610,19 +610,19 @@ yysymbol_name (yysymbol_kind_t yysymbol)
    STATE-NUM.  */
 static const yytype_int16 yypact[] =
 {
-      67,   189,    16,   140,   -45,   -45,   112,   -45,   -45,    16,
-       9,   -45,    44,   -45,    -5,    62,    60,   -45,   -45,   -45,
-      -2,   -45,   -45,   -45,    38,    27,   181,   -45,   -45,   116,
-     116,    63,    63,    34,    98,   -45,     7,    16,   121,    16,
-      92,   174,   -45,   -45,   -45,    48,   176,    16,   -45,    16,
-     -45,   125,   134,   -45,    16,   143,   147,   193,   -45,   181,
-     181,   -45,   -45,   -45,    71,    78,   -45,    17,    32,   169,
-     190,    15,   117,   -45,   -45,   -45,    16,    84,    87,   -45,
-      99,    69,   178,   189,    17,   189,    17,   180,   -45,   -45,
-     -45,   -45,   105,    16,   -45,   -45,   -45,    16,   -45,   -45,
-     165,    20,    17,    47,   176,   -45,   -45,   -45,   -45,   -45,
-     -45,    17,   -45,   -45,   107,    90,   -45,   -45,   -45,   114,
-     -45
+      90,    15,    86,    67,   -45,   -45,   112,   -45,   -45,    86,
+       9,   -45,    51,   -45,    -5,   107,   105,   -45,   -45,   -45,
+      18,   -45,   -45,   -45,    56,    25,   169,   -45,   -45,   117,
+     117,    29,    29,    32,   161,   -45,    77,    86,   121,    86,
+      12,    78,   -45,   -45,   -45,    40,   156,    86,   -45,    86,
+     -45,    76,    87,   -45,    86,    86,    86,   130,   139,    93,
+     -45,   173,   173,   -45,   -45,   -45,    94,   103,   -45,   177,
+      50,   138,   171,    31,   163,   -45,   -45,   -45,    86,   115,
+     158,   -45,   135,    72,   122,   -45,   -45,   148,   -45,   -45,
+     -45,   -45,   -45,   -45,   175,    86,   -45,   -45,   -45,    86,
+     -45,   -45,   157,    53,   177,   144,   156,   -45,   -45,   -45,
+     -45,   -45,   -45,   177,   -45,   -45,   176,     7,   -45,   -45,
+     -45,   178,   -45
 };
 
 /* YYDEFACT[STATE-NUM] -- Default reduction number in state STATE-NUM.
@@ -632,32 +632,32 @@ static const yytype_int8 yydefact[] =
 {
        0,     0,     0,    64,    67,    66,     0,    36,    35,     0,
        0,     2,     0,     9,     0,    21,     0,     6,     7,     8,
-       0,    11,    12,    14,     0,    54,    47,    58,    65,     0,
+       0,    11,    12,    14,     0,    54,    49,    58,    65,     0,
        0,     0,     0,    64,     0,    54,     0,     0,     0,     0,
        0,     0,     1,     3,    10,     0,    25,     0,     5,     0,
-      20,     0,     0,    13,     0,     0,     0,     0,    64,    53,
-      51,    60,    59,    63,     0,    30,    33,    34,     0,     0,
-       0,     0,     0,    45,    43,    46,     0,     0,    24,    27,
-       0,     0,     0,    52,    49,    50,    48,     0,    62,    57,
-      61,    56,     0,     0,    55,    40,    16,     0,    39,    38,
-       0,     0,    19,     0,     0,    28,    17,    37,    41,    29,
-      32,    18,    44,    42,     0,     0,    23,    26,    15,     0,
-      22
+      20,     0,     0,    13,     0,     0,     0,     0,     0,     0,
+      64,    53,    51,    60,    59,    63,     0,    30,    33,    34,
+       0,     0,     0,     0,     0,    45,    43,    46,     0,     0,
+      24,    27,     0,     0,     0,    52,    50,     0,    48,    47,
+      62,    57,    61,    56,     0,     0,    55,    40,    16,     0,
+      39,    38,     0,     0,    19,     0,     0,    28,    17,    37,
+      41,    29,    32,    18,    44,    42,     0,     0,    23,    26,
+      15,     0,    22
 };
 
 /* YYPGOTO[NTERM-NUM].  */
 static const yytype_int16 yypgoto[] =
 {
-     -45,   -45,   -11,   -45,   -45,   -45,    61,   -45,   -45,   -45,
-     -45,   -45,   -45,    41,   -45,   -45,   -45,    53,   -44,   -45,
-     -45,   -45,     1,     0,   175,   -27,   -45
+     -45,   -45,   -11,   -45,   -45,   -45,   111,   -45,   -45,   -45,
+     -45,   -45,   -45,    84,   -45,   -45,   -45,    96,   -44,   -45,
+     -45,   -45,     1,     0,   155,   -27,   -45
 };
 
 /* YYDEFGOTO[NTERM-NUM].  */
 static const yytype_int8 yydefgoto[] =
 {
-       0,    10,    11,    12,    13,    14,    70,    15,    16,    17,
-      18,    77,    78,    79,    19,    64,    65,    66,    20,    21,
+       0,    10,    11,    12,    13,    14,    72,    15,    16,    17,
+      18,    79,    80,    81,    19,    66,    67,    68,    20,    21,
       22,    23,    24,    35,    26,    27,    28
 };
 
@@ -666,52 +666,50 @@ static const yytype_int8 yydefgoto[] =
    number is the opposite.  If YYTABLE_NINF, syntax error.  */
 static const yytype_int8 yytable[] =
 {
-      25,    43,    80,    34,    61,    62,    44,    40,     1,    42,
-      41,    45,    25,    50,     2,   -31,    98,     1,    51,    52,
-      51,    52,    33,     2,     4,     5,    99,   -19,    89,    91,
-     114,    33,    97,     4,     5,    51,    52,    67,    68,    71,
-      72,    51,    52,    54,    -4,     1,    94,    37,    81,    53,
-      82,     2,    84,    86,    -4,    87,   115,    76,   116,     3,
-      80,     4,     5,     6,     7,     8,     9,    -4,     1,    46,
-       2,    48,    51,    52,     2,    47,    49,   102,    58,    92,
-       4,     5,     3,   106,     4,     5,     6,     7,     8,     9,
-      93,     1,   103,    73,    67,    51,    52,     2,   111,   104,
-      -4,    51,    52,    74,   119,     3,    63,     4,     5,     6,
-       7,     8,     9,     1,   105,    25,   109,    57,   118,    39,
-      51,    52,    69,     2,   120,   100,    83,    33,     2,     4,
-       5,    58,     2,     4,     5,    85,    33,   101,     4,     5,
-      33,     2,     4,     5,    88,   117,   110,    36,    90,    33,
-       2,     4,     5,    37,     2,     0,    38,     0,    58,     0,
-       4,     5,    58,     0,     4,     5,   112,     0,   -63,   -63,
-     -63,   -63,    29,    30,    31,    32,   113,    51,    52,     0,
-      95,    51,    52,    51,    52,    75,    55,    56,     0,   107,
-       0,   108,    29,    30,    31,    32,     7,     8,    31,    32,
-       0,    96,    97,     0,    59,    60
+      25,    43,    82,    34,    63,    64,    44,    40,     1,    42,
+      41,    45,    25,    75,     2,    51,    52,    -4,    29,    30,
+      31,    32,     3,    76,     4,     5,     6,     7,     8,     9,
+      91,    93,   100,    50,    51,    52,     2,    69,    70,    73,
+      74,    54,   101,   -19,    60,    37,     4,     5,    83,    78,
+      84,    -4,     1,    51,    52,    87,    88,    89,     2,    51,
+      52,    -4,    82,   116,    96,    99,     3,    53,     4,     5,
+       6,     7,     8,     9,    36,    51,    52,    85,     1,   104,
+      37,    51,    52,    38,     2,   -31,   108,     1,    86,    77,
+      -4,     1,    33,     2,     4,     5,    69,     2,    31,    32,
+     113,    33,    94,     4,     5,     3,   121,     4,     5,     6,
+       7,     8,     9,     1,    46,    95,    48,    25,    59,    39,
+      47,    49,    71,   105,     2,    51,    52,    33,     2,     4,
+       5,    90,    60,   109,     4,     5,    33,     2,     4,     5,
+      92,    29,    30,    31,    32,    60,     2,     4,     5,    97,
+     107,    51,    52,   117,    60,   118,     4,     5,   114,   110,
+     -63,   -63,   -63,   -63,    51,    52,    51,    52,   115,    65,
+     106,   102,    55,    56,    57,    58,     7,     8,    57,    58,
+      51,    52,    98,    99,    61,    62,   111,   120,   122,   103,
+     119,   112
 };
 
 static const yytype_int8 yycheck[] =
 {
        0,    12,    46,     2,    31,    32,    11,     6,     1,     0,
-       9,    16,    12,    15,     7,     8,     1,     1,     3,     4,
-       3,     4,    15,     7,    17,    18,    11,    12,    55,    56,
-      10,    15,    12,    17,    18,     3,     4,    36,    37,    38,
-      39,     3,     4,    16,     0,     1,    14,    13,    47,    11,
-      49,     7,    51,    52,    10,    54,     9,     9,    11,    15,
-     104,    17,    18,    19,    20,    21,    22,     0,     1,     7,
-       7,    11,     3,     4,     7,    13,    16,    76,    15,     8,
-      17,    18,    15,    14,    17,    18,    19,    20,    21,    22,
-      12,     1,     8,     1,    93,     3,     4,     7,    97,    12,
-      10,     3,     4,    11,   115,    15,     8,    17,    18,    19,
-      20,    21,    22,     1,    15,   115,    11,     1,    11,     7,
-       3,     4,     1,     7,    10,     8,     1,    15,     7,    17,
-      18,    15,     7,    17,    18,     1,    15,    76,    17,    18,
-      15,     7,    17,    18,     1,   104,    93,     7,     1,    15,
-       7,    17,    18,    13,     7,    -1,    16,    -1,    15,    -1,
-      17,    18,    15,    -1,    17,    18,     1,    -1,     3,     4,
-       5,     6,     3,     4,     5,     6,    11,     3,     4,    -1,
-      11,     3,     4,     3,     4,    11,     5,     6,    -1,    11,
-      -1,    11,     3,     4,     5,     6,    20,    21,     5,     6,
-      -1,    11,    12,    -1,    29,    30
+       9,    16,    12,     1,     7,     3,     4,    10,     3,     4,
+       5,     6,    15,    11,    17,    18,    19,    20,    21,    22,
+      57,    58,     1,    15,     3,     4,     7,    36,    37,    38,
+      39,    16,    11,    12,    15,    13,    17,    18,    47,     9,
+      49,     0,     1,     3,     4,    54,    55,    56,     7,     3,
+       4,    10,   106,    10,    14,    12,    15,    11,    17,    18,
+      19,    20,    21,    22,     7,     3,     4,     1,     1,    78,
+      13,     3,     4,    16,     7,     8,    14,     1,     1,    11,
+       0,     1,    15,     7,    17,    18,    95,     7,     5,     6,
+      99,    15,     8,    17,    18,    15,   117,    17,    18,    19,
+      20,    21,    22,     1,     7,    12,    11,   117,     1,     7,
+      13,    16,     1,     8,     7,     3,     4,    15,     7,    17,
+      18,     1,    15,    11,    17,    18,    15,     7,    17,    18,
+       1,     3,     4,     5,     6,    15,     7,    17,    18,    11,
+      15,     3,     4,     9,    15,    11,    17,    18,     1,    11,
+       3,     4,     5,     6,     3,     4,     3,     4,    11,     8,
+      12,     8,     3,     4,     5,     6,    20,    21,     5,     6,
+       3,     4,    11,    12,    29,    30,    11,    11,    10,    78,
+     106,    95
 };
 
 /* YYSTOS[STATE-NUM] -- The symbol kind of the accessing symbol of
@@ -723,14 +721,14 @@ static const yytype_int8 yystos[] =
       41,    42,    43,    44,    45,    46,    47,    48,    49,     3,
        4,     5,     6,    15,    45,    46,     7,    13,    16,     7,
       45,    45,     0,    25,    11,    16,     7,    13,    11,    16,
-      15,     3,     4,    11,    16,     5,     6,     1,    15,    47,
-      47,    48,    48,     8,    38,    39,    40,    45,    45,     1,
-      29,    45,    45,     1,    11,    11,     9,    34,    35,    36,
-      41,    45,    45,     1,    45,     1,    45,    45,     1,    48,
-       1,    48,     8,    12,    14,    11,    11,    12,     1,    11,
-       8,    29,    45,     8,    12,    15,    14,    11,    11,    11,
-      40,    45,     1,    11,    10,     9,    11,    36,    11,    25,
-      10
+      15,     3,     4,    11,    16,     3,     4,     5,     6,     1,
+      15,    47,    47,    48,    48,     8,    38,    39,    40,    45,
+      45,     1,    29,    45,    45,     1,    11,    11,     9,    34,
+      35,    36,    41,    45,    45,     1,     1,    45,    45,    45,
+       1,    48,     1,    48,     8,    12,    14,    11,    11,    12,
+       1,    11,     8,    29,    45,     8,    12,    15,    14,    11,
+      11,    11,    40,    45,     1,    11,    10,     9,    11,    36,
+      11,    25,    10
 };
 
 /* YYR1[RULE-NUM] -- Symbol kind of the left-hand side of rule RULE-NUM.  */
@@ -752,7 +750,7 @@ static const yytype_int8 yyr2[] =
        2,     1,     1,     2,     1,     6,     4,     4,     3,     1,
        2,     1,     7,     5,     1,     0,     3,     1,     2,     5,
        1,     0,     3,     1,     1,     1,     1,     4,     4,     4,
-       4,     4,     5,     3,     5,     3,     3,     1,     3,     3,
+       4,     4,     5,     3,     5,     3,     3,     3,     3,     1,
        3,     3,     3,     3,     1,     4,     3,     3,     1,     3,
        3,     3,     3,     3,     1,     1,     1,     1
 };
@@ -1488,7 +1486,7 @@ yyreduce:
   switch (yyn)
     {
   case 2: /* program: stmt_list  */
-#line 49 "parser.y"
+#line 52 "parser.y"
 {
 	(yyval.ast) = createNode(node_program); // Begin forming Parse tree/AST 
 	(yyval.ast)->program.stmt_list = (yyvsp[0].ast);
@@ -1496,11 +1494,11 @@ yyreduce:
 	root = (yyval.ast);
 	printf("PARSER : Program successfully parsed\n");
 }
-#line 1500 "parser.tab.c"
+#line 1498 "parser.tab.c"
     break;
 
   case 3: /* stmt_list: stmt stmt_list  */
-#line 59 "parser.y"
+#line 62 "parser.y"
 {
 	(yyval.ast) = createNode(node_stmt_list);
 	(yyval.ast)->stmt_list.stmt = (yyvsp[-1].ast);
@@ -1508,30 +1506,30 @@ yyreduce:
 	(yyval.ast)->lineno = yylineno;
 	printf("PARSER : Processed statement list\n");
 }
-#line 1512 "parser.tab.c"
+#line 1510 "parser.tab.c"
     break;
 
   case 4: /* stmt_list: %empty  */
-#line 67 "parser.y"
+#line 70 "parser.y"
         {
 		(yyval.ast) = createNode(node_stmt_list); // If statement list is empty 
 		(yyval.ast)->lineno = yylineno; 
 	}
-#line 1521 "parser.tab.c"
+#line 1519 "parser.tab.c"
     break;
 
   case 14: /* stmt: return_stmt  */
-#line 83 "parser.y"
+#line 86 "parser.y"
     {
         (yyval.ast) = createNode(node_stmt);
         (yyval.ast)->stmt.right = (yyvsp[0].ast);
         (yyval.ast)->lineno = yylineno;
     }
-#line 1531 "parser.tab.c"
+#line 1529 "parser.tab.c"
     break;
 
   case 15: /* array_def: array_decl ASSIGN LCURLY expr_list RCURLY SEMICOLON  */
-#line 91 "parser.y"
+#line 94 "parser.y"
         {
 		printf("Found array definition\n");
 		(yyval.ast) = createNode(node_array_def);
@@ -1539,22 +1537,22 @@ yyreduce:
 		(yyval.ast)->array_def.expr_list = (yyvsp[-2].ast);
 		(yyval.ast)->lineno = yylineno; 
 	}
-#line 1543 "parser.tab.c"
+#line 1541 "parser.tab.c"
     break;
 
   case 16: /* array_def: IDENTIFIER ASSIGN expr_list SEMICOLON  */
-#line 99 "parser.y"
+#line 102 "parser.y"
         {
 		(yyval.ast) = createNode(node_array_def);
 		(yyval.ast)->array_def.identifier = (yyvsp[-3].string);
 		(yyval.ast)->array_def.expr_list = (yyvsp[-1].ast);
 		(yyval.ast)->lineno = yylineno;
 	}
-#line 1554 "parser.tab.c"
+#line 1552 "parser.tab.c"
     break;
 
   case 17: /* array_decl: declaration LBRACKET expr RBRACKET  */
-#line 107 "parser.y"
+#line 110 "parser.y"
 {
 	printf("Found array decl\n");
 	(yyval.ast) = createNode(node_array_decl);
@@ -1562,32 +1560,32 @@ yyreduce:
 	(yyval.ast)->array_decl.size = (yyvsp[-1].ast);
 	(yyval.ast)->lineno = yylineno;
 }
-#line 1566 "parser.tab.c"
+#line 1564 "parser.tab.c"
     break;
 
   case 18: /* expr_list: expr_list COMA expr  */
-#line 117 "parser.y"
+#line 120 "parser.y"
         {
 		(yyval.ast) = createNode(node_expr_list);
 		(yyval.ast)->expr_list.expr = (yyvsp[0].ast);
 		(yyval.ast)->expr_list.expr_list = (yyvsp[-2].ast);
 		(yyval.ast)->lineno = yylineno;
 	}
-#line 1577 "parser.tab.c"
+#line 1575 "parser.tab.c"
     break;
 
   case 19: /* expr_list: expr  */
-#line 124 "parser.y"
+#line 127 "parser.y"
         {
 		(yyval.ast) = createNode(node_expr_list);
 		(yyval.ast)->expr_list.expr_list = (yyvsp[0].ast);
 		(yyval.ast)->lineno = yylineno;
 	}
-#line 1587 "parser.tab.c"
+#line 1585 "parser.tab.c"
     break;
 
   case 20: /* declaration: type IDENTIFIER  */
-#line 131 "parser.y"
+#line 134 "parser.y"
         {
 		printf("PARSER : Found  declaration\n");
 		(yyval.ast) = createNode(node_declaration);
@@ -1595,11 +1593,11 @@ yyreduce:
 		(yyval.ast)->declaration.identifier = (yyvsp[0].string);
 		(yyval.ast)->lineno = lnolastid;
 	}
-#line 1599 "parser.tab.c"
+#line 1597 "parser.tab.c"
     break;
 
   case 22: /* func_def: declaration LPAREN func_params RPAREN LCURLY stmt_list RCURLY  */
-#line 144 "parser.y"
+#line 147 "parser.y"
         {
 		printf("Found function definition\n");
 		(yyval.ast) = createNode(node_func_def);
@@ -1608,11 +1606,11 @@ yyreduce:
 		(yyval.ast)->func_def.stmt_list = (yyvsp[-1].ast);
 		(yyval.ast)->lineno = yylineno;
 	}
-#line 1612 "parser.tab.c"
+#line 1610 "parser.tab.c"
     break;
 
   case 23: /* func_decl: declaration LPAREN func_params RPAREN SEMICOLON  */
-#line 154 "parser.y"
+#line 157 "parser.y"
         {
 		printf("PARSER : Found function declaration\n");
 		(yyval.ast) = createNode(node_func_decl);
@@ -1620,32 +1618,32 @@ yyreduce:
 		(yyval.ast)->func_decl.params = (yyvsp[-2].ast);
 		(yyval.ast)->lineno = yylineno;
 	}
-#line 1624 "parser.tab.c"
+#line 1622 "parser.tab.c"
     break;
 
   case 24: /* func_params: param_list  */
-#line 163 "parser.y"
+#line 166 "parser.y"
         {
 		printf("Found func_params\n");
 		(yyval.ast) = createNode(node_func_params);
 		(yyval.ast)->func_params.param_list = (yyvsp[0].ast);
 		(yyval.ast)->lineno = yylineno;
 	}
-#line 1635 "parser.tab.c"
+#line 1633 "parser.tab.c"
     break;
 
   case 25: /* func_params: %empty  */
-#line 170 "parser.y"
+#line 173 "parser.y"
         {
 		printf("Found func_params\n");
 		(yyval.ast) = createNode(node_func_params);
 		(yyval.ast)->lineno = yylineno;
 	}
-#line 1645 "parser.tab.c"
+#line 1643 "parser.tab.c"
     break;
 
   case 26: /* param_list: param_list COMA param  */
-#line 177 "parser.y"
+#line 180 "parser.y"
         {	// Multiple parameters
 		printf("Found param_list\n");
 		(yyval.ast) = createNode(node_param_list);
@@ -1653,11 +1651,11 @@ yyreduce:
 		(yyval.ast)->param_list.param = (yyvsp[0].ast); 
 		(yyval.ast)->lineno = yylineno;
 	}
-#line 1657 "parser.tab.c"
+#line 1655 "parser.tab.c"
     break;
 
   case 27: /* param_list: param  */
-#line 185 "parser.y"
+#line 188 "parser.y"
         {
 		// Single parameter
 		printf("Found param_list\n");
@@ -1665,11 +1663,11 @@ yyreduce:
 		(yyval.ast)->param_list.param_list = (yyvsp[0].ast);
 		(yyval.ast)->lineno = yylineno;
 	}
-#line 1669 "parser.tab.c"
+#line 1667 "parser.tab.c"
     break;
 
   case 28: /* param: type IDENTIFIER  */
-#line 194 "parser.y"
+#line 197 "parser.y"
         {
 		printf("Found param\n");
 		(yyval.ast) = createNode(node_param);
@@ -1677,11 +1675,11 @@ yyreduce:
 		(yyval.ast)->param.identifier = (yyvsp[0].string);
 		(yyval.ast)->lineno = yylineno;
 	}
-#line 1681 "parser.tab.c"
+#line 1679 "parser.tab.c"
     break;
 
   case 29: /* func_call: IDENTIFIER LPAREN func_args RPAREN SEMICOLON  */
-#line 203 "parser.y"
+#line 206 "parser.y"
         {
 		printf("Found function call\n");
 		(yyval.ast) = createNode(node_func_call);
@@ -1689,32 +1687,32 @@ yyreduce:
 		(yyval.ast)->func_call.args = (yyvsp[-2].ast);
 		(yyval.ast)->lineno = yylineno;
 	}
-#line 1693 "parser.tab.c"
+#line 1691 "parser.tab.c"
     break;
 
   case 30: /* func_args: arg_list  */
-#line 212 "parser.y"
+#line 215 "parser.y"
         {
 		printf("Found function args\n");
 		(yyval.ast) = createNode(node_func_args);
 		(yyval.ast)->func_args.arg_list = (yyvsp[0].ast);
 		(yyval.ast)->lineno = yylineno;
 	}
-#line 1704 "parser.tab.c"
+#line 1702 "parser.tab.c"
     break;
 
   case 31: /* func_args: %empty  */
-#line 219 "parser.y"
+#line 222 "parser.y"
         {
 		printf("Found function args\n");
 		(yyval.ast) = createNode(node_func_args);
 		(yyval.ast)->lineno = yylineno;
 	}
-#line 1714 "parser.tab.c"
+#line 1712 "parser.tab.c"
     break;
 
   case 32: /* arg_list: arg_list COMA arg  */
-#line 226 "parser.y"
+#line 229 "parser.y"
         {
 		// Multiple args
 		printf("Found arg list\n");
@@ -1723,11 +1721,11 @@ yyreduce:
 		(yyval.ast)->arg_list.arg = (yyvsp[0].ast);
 		(yyval.ast)->lineno = yylineno;
 	}
-#line 1727 "parser.tab.c"
+#line 1725 "parser.tab.c"
     break;
 
   case 33: /* arg_list: arg  */
-#line 235 "parser.y"
+#line 238 "parser.y"
         {
 		// Single arg
 		printf("Found arg list\n");
@@ -1735,42 +1733,42 @@ yyreduce:
 		(yyval.ast)->arg_list.arg = (yyvsp[0].ast);
 		(yyval.ast)->lineno = yylineno;
 	}
-#line 1739 "parser.tab.c"
+#line 1737 "parser.tab.c"
     break;
 
   case 34: /* arg: expr  */
-#line 244 "parser.y"
+#line 247 "parser.y"
         {
 		printf("Found arg\n");
 		(yyval.ast) = createNode(node_arg);
 		(yyval.ast)->arg.expr = (yyvsp[0].ast);
 		(yyval.ast)->lineno = yylineno;
 	}
-#line 1750 "parser.tab.c"
+#line 1748 "parser.tab.c"
     break;
 
   case 35: /* type: FLOATKW  */
-#line 252 "parser.y"
+#line 255 "parser.y"
         {
 		(yyval.ast) = createNode(node_typekw);
 		(yyval.ast)->typekw.type = (yyvsp[0].string);
 		(yyval.ast)->lineno = yylineno;
 	}
-#line 1760 "parser.tab.c"
+#line 1758 "parser.tab.c"
     break;
 
   case 36: /* type: INTKW  */
-#line 258 "parser.y"
+#line 261 "parser.y"
         {
 		(yyval.ast) = createNode(node_typekw);
 		(yyval.ast)->typekw.type = (yyvsp[0].string);
 		(yyval.ast)->lineno = yylineno;
 	}
-#line 1770 "parser.tab.c"
+#line 1768 "parser.tab.c"
     break;
 
   case 37: /* assignment: var_decl ASSIGN expr SEMICOLON  */
-#line 265 "parser.y"
+#line 268 "parser.y"
         {	
 		(yyval.ast) = createNode(node_assignment);
 		(yyval.ast)->assignment.assignee = (yyvsp[-3].ast);
@@ -1778,11 +1776,11 @@ yyreduce:
 		(yyval.ast)->assignment.expr = (yyvsp[-1].ast);
 		(yyval.ast)->lineno = yylineno;
 	}
-#line 1782 "parser.tab.c"
+#line 1780 "parser.tab.c"
     break;
 
   case 38: /* assignment: IDENTIFIER ASSIGN expr SEMICOLON  */
-#line 273 "parser.y"
+#line 276 "parser.y"
         {
 		(yyval.ast) = createNode(node_assignment);
 		(yyval.ast)->assignment.identifier = (yyvsp[-3].string);
@@ -1790,23 +1788,23 @@ yyreduce:
 		(yyval.ast)->assignment.expr = (yyvsp[-1].ast);
 		(yyval.ast)->lineno = yylineno;
 	}
-#line 1794 "parser.tab.c"
+#line 1792 "parser.tab.c"
     break;
 
   case 39: /* assignment: IDENTIFIER ASSIGN expr error  */
-#line 280 "parser.y"
+#line 283 "parser.y"
                                        {syntaxerrorno++; printf("Ln.%d : PARSER : SYNTAX ERROR : MISSING SEMICOLON\n", yylineno);}
-#line 1800 "parser.tab.c"
+#line 1798 "parser.tab.c"
     break;
 
   case 40: /* assignment: IDENTIFIER ASSIGN error SEMICOLON  */
-#line 281 "parser.y"
+#line 284 "parser.y"
                                             {syntaxerrorno++; printf("SYNTAX ERROR : Missing assignment arg.");}
-#line 1806 "parser.tab.c"
+#line 1804 "parser.tab.c"
     break;
 
   case 41: /* assignment: array_index ASSIGN expr SEMICOLON  */
-#line 283 "parser.y"
+#line 286 "parser.y"
         {
 		(yyval.ast) = createNode(node_assignment);
 		(yyval.ast)->assignment.assignee = (yyvsp[-3].ast);
@@ -1814,69 +1812,56 @@ yyreduce:
 		(yyval.ast)->assignment.expr = (yyvsp[-1].ast);
 		(yyval.ast)->lineno = yylineno;
 	}
-#line 1818 "parser.tab.c"
+#line 1816 "parser.tab.c"
     break;
 
   case 42: /* print_stmt: PRINTKW LPAREN expr RPAREN SEMICOLON  */
-#line 292 "parser.y"
+#line 295 "parser.y"
         {
 		printf("PARSER : Found  a print statement\n");
 		(yyval.ast) = createNode(node_print_stmt);
 		(yyval.ast)->print_stmt.expr = (yyvsp[-2].ast);
 		(yyval.ast)->lineno = yylineno;
 	}
-#line 1829 "parser.tab.c"
+#line 1827 "parser.tab.c"
     break;
 
   case 43: /* print_stmt: PRINTKW expr SEMICOLON  */
-#line 299 "parser.y"
+#line 302 "parser.y"
         {
 		printf("PARSER : Found  a print statement\n");
 		(yyval.ast) = createNode(node_print_stmt);
 		(yyval.ast)->print_stmt.expr = (yyvsp[-1].ast);
 		(yyval.ast)->lineno = yylineno;
 	}
-#line 1840 "parser.tab.c"
+#line 1838 "parser.tab.c"
     break;
 
   case 44: /* print_stmt: PRINTKW LPAREN expr RPAREN error  */
-#line 305 "parser.y"
+#line 308 "parser.y"
                                            {syntaxerrorno++; printf("SYNTAX ERROR : MISSING SEMICOLON\n");}
-#line 1846 "parser.tab.c"
+#line 1844 "parser.tab.c"
     break;
 
   case 45: /* print_stmt: PRINTKW expr error  */
-#line 306 "parser.y"
+#line 309 "parser.y"
                              { syntaxerrorno++; printf("SYNTAX ERROR : MISSING SEMICOLON\n");}
-#line 1852 "parser.tab.c"
+#line 1850 "parser.tab.c"
     break;
 
   case 46: /* return_stmt: RETURNKW expr SEMICOLON  */
-#line 309 "parser.y"
+#line 312 "parser.y"
         {
 		printf("Found return statement");
 		(yyval.ast) = createNode(node_return_stmt);
 		(yyval.ast)->return_stmt.expr = (yyvsp[-1].ast);
 		(yyval.ast)->lineno = yylineno;
 	}
-#line 1863 "parser.tab.c"
+#line 1861 "parser.tab.c"
     break;
 
-  case 47: /* expr: term  */
-#line 318 "parser.y"
-        {
-		/*
-		$$ = createNode(node_expr);
-		$$->expr.left = $1;
-		*/
-		(yyval.ast) = (yyvsp[0].ast);
-		(yyval.ast)->lineno = yylineno;
-	}
-#line 1876 "parser.tab.c"
-    break;
-
-  case 48: /* expr: expr MINUS expr  */
-#line 327 "parser.y"
+  case 47: /* expr: term MINUS expr  */
+#line 321 "parser.y"
         {
 		printf("PARSER : Found  subtraction expression\n");
 		(yyval.ast) = createNode(node_expr);
@@ -1885,11 +1870,11 @@ yyreduce:
 		(yyval.ast)->expr.right = (yyvsp[0].ast);
 		(yyval.ast)->lineno = yylineno;
 	}
-#line 1889 "parser.tab.c"
+#line 1874 "parser.tab.c"
     break;
 
-  case 49: /* expr: expr PLUS expr  */
-#line 336 "parser.y"
+  case 48: /* expr: term PLUS expr  */
+#line 330 "parser.y"
         {
 		printf("PARSER : Found  addition expression\n");
 		(yyval.ast) = createNode(node_expr);
@@ -1898,46 +1883,55 @@ yyreduce:
 		(yyval.ast)->expr.right = (yyvsp[0].ast);
 		(yyval.ast)->lineno = yylineno;
 	}
-#line 1902 "parser.tab.c"
+#line 1887 "parser.tab.c"
+    break;
+
+  case 49: /* expr: term  */
+#line 339 "parser.y"
+        {
+		(yyval.ast) = (yyvsp[0].ast);
+		(yyval.ast)->lineno = yylineno;
+	}
+#line 1896 "parser.tab.c"
     break;
 
   case 50: /* expr: expr MINUS error  */
-#line 344 "parser.y"
+#line 343 "parser.y"
                            {syntaxerrorno++; printf("Ln.%d: SYNTAX ERROR : Illegal statement\n", yylineno);}
-#line 1908 "parser.tab.c"
+#line 1902 "parser.tab.c"
     break;
 
   case 51: /* expr: error MINUS term  */
-#line 345 "parser.y"
+#line 344 "parser.y"
                                 {syntaxerrorno++; printf("Ln.%d: SYNTAX ERROR : Illegal statement\n", yylineno);}
-#line 1914 "parser.tab.c"
+#line 1908 "parser.tab.c"
     break;
 
   case 52: /* expr: expr PLUS error  */
-#line 346 "parser.y"
+#line 345 "parser.y"
                           {syntaxerrorno++; printf("Ln.%d: SYNTAX ERROR : Illegal statement\n", yylineno);}
-#line 1920 "parser.tab.c"
+#line 1914 "parser.tab.c"
     break;
 
   case 53: /* expr: error PLUS term  */
-#line 347 "parser.y"
+#line 346 "parser.y"
                                 {syntaxerrorno++; printf("Ln.%d: SYNTAX ERROR : Illegal statement\n", yylineno);}
-#line 1926 "parser.tab.c"
+#line 1920 "parser.tab.c"
     break;
 
   case 54: /* expr: array_index  */
-#line 349 "parser.y"
+#line 348 "parser.y"
         {
 		printf("PARSER : Found  array_index expression\n");
 		(yyval.ast) = createNode(node_expr);
 		(yyval.ast)->expr.left = (yyvsp[0].ast);
 		(yyval.ast)->lineno = yylineno;
 	}
-#line 1937 "parser.tab.c"
+#line 1931 "parser.tab.c"
     break;
 
   case 55: /* array_index: IDENTIFIER LBRACKET expr RBRACKET  */
-#line 358 "parser.y"
+#line 357 "parser.y"
 {
 	printf("PARSER: Found array_index\n");
 	(yyval.ast) = createNode(node_array_index);
@@ -1945,11 +1939,11 @@ yyreduce:
 	(yyval.ast)->array_index.index = (yyvsp[-1].ast);
 	(yyval.ast)->lineno = yylineno;
 }
-#line 1949 "parser.tab.c"
+#line 1943 "parser.tab.c"
     break;
 
   case 56: /* term: term DIV factor  */
-#line 367 "parser.y"
+#line 366 "parser.y"
         {
 		printf("PARSER : Found  division expression\n");
 		(yyval.ast) = createNode(node_term);
@@ -1959,11 +1953,11 @@ yyreduce:
 		(yyval.ast)->lineno = yylineno;
 		
 	}
-#line 1963 "parser.tab.c"
+#line 1957 "parser.tab.c"
     break;
 
   case 57: /* term: term MUL factor  */
-#line 377 "parser.y"
+#line 376 "parser.y"
         {
 		printf("PARSER : Found  multiplication expression\n");
 		(yyval.ast) = createNode(node_term);
@@ -1972,81 +1966,77 @@ yyreduce:
 		(yyval.ast)->term.factor = (yyvsp[0].ast);
 		(yyval.ast)->lineno = yylineno;
 	}
-#line 1976 "parser.tab.c"
+#line 1970 "parser.tab.c"
     break;
 
   case 58: /* term: factor  */
-#line 386 "parser.y"
+#line 385 "parser.y"
         {
 		printf("PARSER : Found  factor\n"); 
-		
-		/*$$ = createNode(node_term); 
-		$$->term.factor = $1;
-		*/
 		(yyval.ast) = (yyvsp[0].ast);
 		(yyval.ast)->lineno = yylineno;
 	}
-#line 1990 "parser.tab.c"
+#line 1980 "parser.tab.c"
     break;
 
   case 59: /* term: error DIV factor  */
-#line 395 "parser.y"
+#line 390 "parser.y"
                            {syntaxerrorno++; printf("Ln.%d : SYNTAX ERROR : Missing term in expression\n", yylineno);}
-#line 1996 "parser.tab.c"
+#line 1986 "parser.tab.c"
     break;
 
   case 60: /* term: error MUL factor  */
-#line 396 "parser.y"
+#line 391 "parser.y"
                            {syntaxerrorno++; printf("Ln.%d :SYNTAX ERROR : Missing term in expression\n", yylineno);}
-#line 2002 "parser.tab.c"
+#line 1992 "parser.tab.c"
     break;
 
   case 61: /* term: term DIV error  */
-#line 397 "parser.y"
+#line 392 "parser.y"
                          {syntaxerrorno++; printf("Ln.%d :SYNTAX ERROR : Missing factor in expression\n", yylineno);}
-#line 2008 "parser.tab.c"
+#line 1998 "parser.tab.c"
     break;
 
   case 62: /* term: term MUL error  */
-#line 398 "parser.y"
+#line 393 "parser.y"
                          {syntaxerrorno++; printf("Ln.%d :SYNTAX ERROR : Missing factor in expression\n", yylineno);}
-#line 2014 "parser.tab.c"
+#line 2004 "parser.tab.c"
     break;
 
   case 63: /* factor: LPAREN expr RPAREN  */
-#line 401 "parser.y"
+#line 396 "parser.y"
         {
 	printf("PARSER : Found  parenthesis-enclosed expression\n");
 	(yyval.ast) = createNode(node_factor);
 	(yyval.ast)->lineno = yylineno;
 	(yyval.ast)->factor.expr = (yyvsp[-1].ast);
 	}
-#line 2025 "parser.tab.c"
+#line 2015 "parser.tab.c"
     break;
 
   case 64: /* factor: IDENTIFIER  */
-#line 408 "parser.y"
+#line 403 "parser.y"
         {
 		printf("PARSER : Found  identifier\n");
 		(yyval.ast) = createNode(node_factor);
 		(yyval.ast)->factor.identifier = (yyvsp[0].string);
 		(yyval.ast)->lineno = yylineno;
 	}
-#line 2036 "parser.tab.c"
+#line 2026 "parser.tab.c"
     break;
 
   case 65: /* factor: number  */
-#line 415 "parser.y"
+#line 410 "parser.y"
         {	
 		(yyval.ast) = createNode(node_factor);
 		(yyval.ast)->factor.number = (yyvsp[0].ast);
 		(yyval.ast)->lineno = yylineno;
 	}
-#line 2046 "parser.tab.c"
+#line 2036 "parser.tab.c"
     break;
 
   case 66: /* number: FLOAT  */
-#line 422 "parser.y"
+#line 417 "parser.y"
         {
 		printf("PARSER : Found  number - float\n");
 		(yyval.ast) = createNode(node_number);
@@ -2054,11 +2044,11 @@ yyreduce:
 		(yyval.ast)->number.type = "float";
 		(yyval.ast)->lineno = yylineno;
 	}
-#line 2058 "parser.tab.c"
+#line 2048 "parser.tab.c"
     break;
 
   case 67: /* number: INT  */
-#line 430 "parser.y"
+#line 425 "parser.y"
         {
 		printf("PARSER : Found  number - int\n");
 		(yyval.ast) = createNode(node_number);
@@ -2066,11 +2056,11 @@ yyreduce:
 		(yyval.ast)->number.type = "int";
 		(yyval.ast)->lineno = yylineno;
 	}
-#line 2070 "parser.tab.c"
+#line 2060 "parser.tab.c"
     break;
 
 
-#line 2074 "parser.tab.c"
+#line 2064 "parser.tab.c"
 
       default: break;
     }
@@ -2294,7 +2284,7 @@ yyreturnlab:
   return yyresult;
 }
 
-#line 438 "parser.y"
+#line 433 "parser.y"
 
 
 int main(int argc, char** argv) {

@@ -24,10 +24,10 @@ void semanticAnalysis(Node* root, SymbolTable* symbolTable)
     switch (root->nodeType) 
     {
         case node_program:
-            generateTAC(root);
             printf(RED BOLD "\nSEMANTIC ANALYSIS\n\n" RESET);
-            if(tacHead != NULL) {printAllTAC(tacHead);}
             semanticAnalysis(root->program.stmt_list, symbolTable);
+             generateTACUtil(root);
+             if(tacHead != NULL) {printAllTAC(tacHead);}
             break; 
         case node_stmt_list:
             if(root->stmt_list.stmt != NULL)
@@ -319,6 +319,27 @@ void semanticAnalysis(Node* root, SymbolTable* symbolTable)
 
 }
 
+TAC* generateTACUtil(Node* node)
+{
+    generateTAC(node);
+    if(!isEmpty(operatorStack) && stackSize(operandStack) >= 2)
+        {
+        char* op = pop(operatorStack);
+        char* operand2 = pop(operandStack);
+        char* operand1 = pop(operandStack);
+        TAC* instr = createTAC( op, operand1, operand2);
+        push(operandStack, instr->label);
+        printf("Result: %s\n", instr->label);
+        counter++;
+        } else if (pop(operatorStack) == "write" && stackSize(operandStack) == 1)
+        {
+            char* operand = pop(operandStack);
+            TAC* instr = createTAC( "write", operand, NULL);
+            printf("Result: %s\n", instr->label);
+            counter++;
+        }   
+    
+}
 
 TAC* generateTAC(Node* node)
 {
@@ -331,6 +352,18 @@ TAC* generateTAC(Node* node)
         {
             case node_program:
                 generateTAC(node->program.stmt_list);
+                /*
+                while(!isEmpty(operatorStack) && stackSize(operandStack) >= 2)
+                {
+                    char* op = pop(operatorStack);
+                    char* operand2 = pop(operandStack);
+                    char* operand1 = pop(operandStack);
+                    TAC* instr = createTAC( op, operand1, operand2);
+                    push(operandStack, instr->label);
+                    printf("Result: %s\n", instr->label);
+                    counter++;
+                }
+                */
                 break;
             case node_stmt_list:
                 if(node->stmt_list.stmt != NULL)
@@ -451,6 +484,7 @@ TAC* generateTAC(Node* node)
                 {
                     generateTAC(node->print_stmt.expr);
                 }
+                push(operatorStack, "write");
                 break;
             case node_expr_list:
                 if(node->expr_list.expr != NULL)
@@ -483,8 +517,8 @@ TAC* generateTAC(Node* node)
                 {
                     generateTAC(node->expr.right);
                 }
-                
-                while(!isEmpty(operatorStack) && stackSize(operandStack) >= 2)
+
+                if(!isEmpty(operatorStack) && stackSize(operandStack) >= 2)
                 {
                     char* op = pop(operatorStack);
                     char* operand2 = pop(operandStack);
@@ -494,6 +528,7 @@ TAC* generateTAC(Node* node)
                     printf("Result: %s\n", instr->label);
                     counter++;
                 }
+                
                 
                 break;
             case node_term:
@@ -505,6 +540,18 @@ TAC* generateTAC(Node* node)
                 }
                 generateTAC(node->term.factor);
                 generateTAC(node->term.term);
+
+                  if(!isEmpty(operatorStack) && stackSize(operandStack) >= 2)
+                {
+                    char* op = pop(operatorStack);
+                    char* operand2 = pop(operandStack);
+                    char* operand1 = pop(operandStack);
+                    TAC* instr = createTAC( op, operand1, operand2);
+                    push(operandStack, instr->label);
+                    printf("Result: %s\n", instr->label);
+                    counter++;
+                }
+                
                 break;
             case node_factor:
                 generateTAC(node->factor.number);
@@ -586,7 +633,6 @@ TAC* createTAC( char* op, char* arg1, char* arg2) {
     instr->arg2 = arg2;
     sprintf(buffer, "T%d", counter);
     instr->label = strdup(buffer);
-    instr->result = NULL;
     instr->next = NULL;
 
     // Insert at head if tacHead is NULL
@@ -613,30 +659,16 @@ void printTAC(TAC* tac)
 void printAllTAC(TAC* head) {
     TAC* current = head;
     while (current != NULL) {
+        if (current->arg2 == NULL)
+    {
+        printf("%s = %s %s\n", current->label, current->op, current->arg1);
+    } else {
         printf("%s = %s %s %s\n", 
-            current->result != NULL ? current->result : current->label, 
+            current->label,
             current->arg1, 
             current->op, 
             current->arg2);
+    }
         current = current->next;
     }
-}
-
-char* PerformOp(char* op, char* arg1, char* arg2)
-{
-    /*
-    if (op == '+')
-    {
-        return arg1 + arg2;
-    } else if (op == '-')
-    {
-        return arg1 - arg2;
-    } else if (op == '*')
-    {
-        return arg1 * arg2;
-    } else if (op == '/')
-    {
-        return arg1 / arg2;
-    } 
-    */
 }

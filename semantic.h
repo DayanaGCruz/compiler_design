@@ -9,10 +9,10 @@ typedef struct
     char* op;
     char* arg1;
     char* arg2;
-    char* result;
     char* label;
     struct TAC* next; 
 }TAC;
+
 
 
 typedef struct
@@ -26,6 +26,7 @@ extern TAC* tacHead;
 extern int semerrorno;
 void semanticAnalysis(Node*, SymbolTable* symbolTable);
 int checkTypeCompatibility(const char* type1, const char* type2);
+TAC* generateTACUtil(Node* node);
 TAC* generateTAC( Node* root);
 TAC* createTAC(char* op, char* arg1, char* arg2);
 void printTAC(TAC* tac);
@@ -34,4 +35,5 @@ void push(Stack* stack, char* value);
 char* pop(Stack* stack);
 int stackSize (Stack* stack);
 int isEmpty(Stack* stack);
+
 #endif

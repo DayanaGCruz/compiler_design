@@ -41,7 +41,10 @@ struct FactorNode* head = NULL;
 
 %type <ast> program stmt_list stmt declaration var_decl func_call func_def return_stmt array_decl array_def array_index expr_list func_args arg_list arg func_decl func_params param_list param assignment print_stmt type term factor number expr 
 %type <string> IDENTIFIER INTKW FLOATKW FLOAT INT 
-%type <operator> ASSIGN MINUS PLUS MUL DIV
+%type <operator> MINUS PLUS MUL DIV
+%left PLUS MINUS
+%left MUL DIV
+%type <operator> ASSIGN
 
 %%
 
@@ -314,16 +317,7 @@ return_stmt: RETURNKW expr SEMICOLON
 	}
 	;
 
-expr: term 
-	{
-		/*
-		$$ = createNode(node_expr);
-		$$->expr.left = $1;
-		*/
-		$$ = $1;
-		$$->lineno = yylineno;
-	}
-	| expr MINUS expr
+expr: term MINUS expr
 	{
 		printf("PARSER : Found  subtraction expression\n");
 		$$ = createNode(node_expr);
@@ -332,13 +326,18 @@ expr: term
 		$$->expr.right = $3;
 		$$->lineno = yylineno;
 	}
-	| expr PLUS expr 
+	| term PLUS expr 
 	{
 		printf("PARSER : Found  addition expression\n");
 		$$ = createNode(node_expr);
 		$$->expr.operator = $2;
 		$$->expr.left = $1;
 		$$->expr.right = $3;
+		$$->lineno = yylineno;
+	}
+	| term 
+	{
+		$$ = $1;
 		$$->lineno = yylineno;
 	}
 	| expr MINUS error {syntaxerrorno++; printf("Ln.%d: SYNTAX ERROR : Illegal statement\n", yylineno);}
@@ -385,10 +384,6 @@ term: term DIV factor
 	| factor 
 	{
 		printf("PARSER : Found  factor\n"); 
-		
-		/*$$ = createNode(node_term); 
-		$$->term.factor = $1;
-		*/
 		$$ = $1;
 		$$->lineno = yylineno;
 	}
