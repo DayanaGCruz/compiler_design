@@ -544,8 +544,8 @@ TAC* generateTAC(Node* node)
                   if(!isEmpty(operatorStack) && stackSize(operandStack) >= 2)
                 {
                     char* op = pop(operatorStack);
-                    char* operand2 = pop(operandStack);
                     char* operand1 = pop(operandStack);
+                    char* operand2 = pop(operandStack);
                     TAC* instr = createTAC( op, operand1, operand2);
                     push(operandStack, instr->label);
                     printf("Result: %s\n", instr->label);
