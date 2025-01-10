@@ -4,6 +4,7 @@
 #define RED "\x1B[31m"
 #define RESET "\x1B[0m"
 #define BOLD "\x1B[1m"
+//
 void structure(int depth, const char* direction) 
 {
     // Print indentation for structure based on tree depth

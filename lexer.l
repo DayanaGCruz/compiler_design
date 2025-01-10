@@ -1,5 +1,5 @@
 %option noyywrap yylineno nodefault outfile="lexer.c"
-
+//
 %{ 
 	#include "parser.tab.h"
 	#include "ast.h"

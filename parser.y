@@ -1,5 +1,5 @@
 %define parse.error verbose
-
+//
 %{
 #include "ast.h" // Parse/AST Tree Management
 #include "symboltable.h" /*Symbol Table Management*/
