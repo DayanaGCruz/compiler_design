@@ -1,6 +1,25 @@
 #include "semantic.h"
 #include <stdio.h>
 
+// TO DO 
+// Type matching - assignment & decl 
+// sem
+// var deccl
+// type matching 
+
+// opt
+// dead code, constatn folding, constant propogation 
+// orig. 
+// u = 1
+// x = 1
+// y = 2 + x 
+// dead code
+// x = 1
+// y = 2 + x 
+// prop
+// y = 2 + 1
+// folding 
+// y = 3
 #define RED "\x1B[31m"
 #define RESET "\x1B[0m"
 #define BOLD "\x1B[1m"
@@ -168,6 +187,7 @@ void semanticAnalysis(Node* root, SymbolTable* symbolTable)
                 printf("Ln.%d. SEMANTIC ERROR: Undeclared variable reference 2 : Variable %s not declared\n", root->lineno, root->assignment.identifier);
             } else { lExprType = getSymbolTypeString(sym->dataType); }
             semanticAnalysis(root->assignment.expr, symbolTable);
+            checkTypeCompatibility(lExprType, rExprType);
             break;
         case node_typekw:
             printf("IN TYPE KW\n");
@@ -213,7 +233,7 @@ void semanticAnalysis(Node* root, SymbolTable* symbolTable)
                 }
                 else 
                 {
-                    lExprType = lExprType; // Reset the types
+                    lExprType = NULL; // Reset the types
                     rExprType = NULL;
                 }
             } // Assignment types
@@ -227,7 +247,7 @@ void semanticAnalysis(Node* root, SymbolTable* symbolTable)
                 }
                 else 
                 {
-                    lExprType = lExprType; // Reset the types
+                    lExprType = NULL; // Reset the types
                     rExprType = NULL;
                 }
             }
@@ -329,15 +349,15 @@ TAC* generateTACUtil(Node* node)
         char* operand1 = pop(operandStack);
         TAC* instr = createTAC( op, operand1, operand2);
         push(operandStack, instr->label);
-        printf("Result: %s\n", instr->label);
+        printf("Instr Result: %s\n", instr->label);
         counter++;
         } else if (pop(operatorStack) == "write" && stackSize(operandStack) == 1)
         {
             char* operand = pop(operandStack);
             TAC* instr = createTAC( "write", operand, NULL);
-            printf("Result: %s\n", instr->label);
+            printf("Instr Result: %s\n", instr->label);
             counter++;
-        }   
+        }
     
 }
 
@@ -465,10 +485,13 @@ TAC* generateTAC(Node* node)
                 if(node->assignment.assignee != NULL)
                 {
                     generateTAC(node->assignment.assignee);
+                   
                 }
                 if(node->assignment.expr != NULL)
                 {
                     generateTAC(node->assignment.expr);
+                    createTAC("=", node->assignment.assignee->declaration.identifier, pop(operandStack));
+                    //
                 }
                 break;
             case node_typekw:
@@ -485,6 +508,7 @@ TAC* generateTAC(Node* node)
                     generateTAC(node->print_stmt.expr);
                 }
                 push(operatorStack, "write");
+                printf("At print stmt\n");
                 break;
             case node_expr_list:
                 if(node->expr_list.expr != NULL)
@@ -525,7 +549,7 @@ TAC* generateTAC(Node* node)
                     char* operand1 = pop(operandStack);
                     TAC* instr = createTAC( op, operand1, operand2);
                     push(operandStack, instr->label);
-                    printf("Result: %s\n", instr->label);
+                    printf(" Instr Result: %s\n", instr->label);
                     counter++;
                 }
                 
@@ -541,14 +565,14 @@ TAC* generateTAC(Node* node)
                 generateTAC(node->term.factor);
                 generateTAC(node->term.term);
 
-                  if(!isEmpty(operatorStack) && stackSize(operandStack) >= 2)
+                  if(!isEmpty(operatorStack) && stackSize(operandStack) >= 2 )
                 {
                     char* op = pop(operatorStack);
                     char* operand2 = pop(operandStack);
                     char* operand1 = pop(operandStack);
                     TAC* instr = createTAC( op, operand1, operand2);
                     push(operandStack, instr->label);
-                    printf("Result: %s\n", instr->label);
+                    printf(" Instr Result: %s\n", instr->label);
                     counter++;
                 }
                 
@@ -556,11 +580,14 @@ TAC* generateTAC(Node* node)
             case node_factor:
                 generateTAC(node->factor.number);
                 generateTAC(node->factor.expr);
-                generateTAC(node->factor.identifier);
                 break;
             case node_number:
-                printf("Value: %s\n", node->number.value);
+                printf("TAC Value: %s\n", node->number.value);
                 push(operandStack, node->number.value);
+                TAC* instr = createTAC("=", pop(operandStack) , NULL);
+                push(operandStack, instr->label);
+                printf(" Instr Result: %s\n", instr->label);
+                counter++;
                 break;
             default:
                 printf("Unrecognized node in TAC Generation\n");
@@ -571,6 +598,7 @@ TAC* generateTAC(Node* node)
 
 int checkTypeCompatibility(const char* type1, const char* type2)
 {
+    printf("CHECKING TYPE COMPATIBILITY\n");
     if (type1 == NULL || type2 == NULL)
     {
         printf("%s", "Type is NULL\n");
@@ -656,18 +684,27 @@ void printTAC(TAC* tac)
     printf(" = %s %s %s\n", tac->op, tac->arg1, tac->arg2);
 }
 
+// TODO 
+// Support write statements in TAC
+// Resolve TAC to load constants into reg. before use 
+// t0 = 1
+// t1 = 2
+// t3 = t0 + t1
+
 void printAllTAC(TAC* head) {
     TAC* current = head;
     while (current != NULL) {
         if (current->arg2 == NULL)
     {
-        printf("%s = %s %s\n", current->label, current->op, current->arg1);
+        printf("%s -> %s %s\n", current->label, current->op, current->arg1);
     } else {
-        printf("%s = %s %s %s\n", 
+        printf(
+            "%s -> %s %s %s\n", 
             current->label,
             current->arg1, 
             current->op, 
-            current->arg2);
+            current->arg2
+            );
     }
         current = current->next;
     }

@@ -73,7 +73,9 @@ extern int yydebug;
     PRINTKW = 274,                 /* PRINTKW  */
     INTKW = 275,                   /* INTKW  */
     FLOATKW = 276,                 /* FLOATKW  */
-    RETURNKW = 277                 /* RETURNKW  */
+    RETURNKW = 277,                /* RETURNKW  */
+    IFKW = 278,                    /* IFKW  */
+    ELSEKW = 279                   /* ELSEKW  */
   };
   typedef enum yytokentype yytoken_kind_t;
 #endif
@@ -90,7 +92,7 @@ union YYSTYPE
 	char* string; 
 	char* operator;
 
-#line 94 "parser.tab.h"
+#line 96 "parser.tab.h"
 
 };
 typedef union YYSTYPE YYSTYPE;

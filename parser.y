@@ -36,11 +36,11 @@ struct FactorNode* head = NULL;
 %token LPAREN RPAREN LCURLY RCURLY SEMICOLON COMA LBRACKET RBRACKET
 %token IDENTIFIER ASSIGN 
 %token INT FLOAT 
-%token PRINTKW INTKW FLOATKW RETURNKW
+%token PRINTKW INTKW FLOATKW RETURNKW IFKW ELSEKW
 
 
 %type <ast> program stmt_list stmt declaration var_decl func_call func_def return_stmt array_decl array_def array_index expr_list func_args arg_list arg func_decl func_params param_list param assignment print_stmt type term factor number expr 
-%type <string> IDENTIFIER INTKW FLOATKW FLOAT INT 
+%type <string> IDENTIFIER INTKW FLOATKW FLOAT INT IFKW ELSEKW
 %type <operator> MINUS PLUS MUL DIV
 %left PLUS MINUS
 %left MUL DIV
@@ -362,7 +362,7 @@ array_index: IDENTIFIER LBRACKET expr RBRACKET
 	$$->lineno = yylineno;
 }
 ;
-term: term DIV factor 
+term: factor DIV term 
 	{
 		printf("PARSER : Found  division expression\n");
 		$$ = createNode(node_term);
@@ -372,7 +372,7 @@ term: term DIV factor
 		$$->lineno = yylineno;
 		
 	}
-	| term MUL factor 
+	| factor MUL term 
 	{
 		printf("PARSER : Found  multiplication expression\n");
 		$$ = createNode(node_term);

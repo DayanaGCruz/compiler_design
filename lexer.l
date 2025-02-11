@@ -38,6 +38,8 @@ IDENTIFIER  [A-Za-z_]+[A-Za-z0-9_]*
 COMMENT		"//".*
 INT		    [0-9]+[0.-9]*
 FLOAT		[0-9]+.[0-9]+
+IFKW		"if"
+ELSEKW		"else"
 INTKW		"int"
 FLOATKW		"float"
 PRINTKW		"write"
@@ -82,6 +84,16 @@ COMA		","
 		yylval.string = strdup(yytext);
 		return INTKW;
 			}
+{IFKW} {
+		printf("Ln.%d: LEXER: ELSE KEYWORD : %s\n", yylineno, yytext);
+		yylval.string = strdup(yytext);
+		return IFKW;
+}
+{ELSEKW} {
+		printf("Ln.%d: LEXER: ELSE KEYWORD : %s\n", yylineno, yytext);
+		yylval.string = strdup(yytext);
+		return ELSEKW;
+}
 {IDENTIFIER}	{
 		lnolastid = yylineno;
 		printf("Ln.%d: LEXER : IDENTIFIER : %s\n", yylineno, yytext);

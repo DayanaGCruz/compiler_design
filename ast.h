@@ -38,6 +38,7 @@ typedef struct Node
 NodeType nodeType; 
 int lineno;
 union {
+    // TO DO - MAKE IDENTFIER ITS OWN NODE TYPE
     struct  {struct Node* stmt_list;} program;
     struct  {struct Node* stmt; struct Node* stmt_list;} stmt_list; 
     struct  {struct Node* right;} stmt;
