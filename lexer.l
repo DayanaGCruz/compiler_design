@@ -1,12 +1,11 @@
 %option noyywrap yylineno nodefault outfile="lexer.c"
-
 %{ 
 	#include "parser.tab.h"
 	#include "ast.h"
 
 	#include "symboltable.h"
 	extern int syntaxerrorno;
-		int lexerrorno;	
+	int lexerrorno;	
 	int lnolastid; // Holds line no of the last identifier token found
 	int* sen = &syntaxerrorno;
 	int* len = &lexerrorno;
@@ -16,22 +15,6 @@
 		fprintf(stderr, "Ln.%d: %s: %s\n", yylineno, s, yytext);
 	}
 
-	/*
-	struct 
-	{
-		bool success = false;
-		struct 
-		{
-			int lineno;
-			char* errMessage;
-		} errLogLine;
-		int lineno[];
-		void printCompilationResults
-		{
-			printf(%s ERROR %s %-10s lineno : %-10s");
-		}
-	} compilationErrorLog;
-	*/
 %}
 
 IDENTIFIER  [A-Za-z_]+[A-Za-z0-9_]*
@@ -44,7 +27,20 @@ INTKW		"int"
 FLOATKW		"float"
 PRINTKW		"write"
 RETURNKW	"return"
+IFKW		"if"
+ELSEKW		"else"
+WHILEKW		"while"
+FORKW		"for"
 ASSIGN		"="
+AND			"&&"
+OR			"||"
+LTHAN		"<"
+GTHAN		">"
+LTHANEQ		"<="
+GTHANEQ		">="
+EQ			"=="
+NOTEQ		"!="
+NOT			"!"
 PLUS		"+"
 MINUS		"-"
 MUL			"*"
@@ -84,6 +80,7 @@ COMA		","
 		yylval.string = strdup(yytext);
 		return INTKW;
 			}
+<<<<<<< HEAD
 {IFKW} {
 		printf("Ln.%d: LEXER: ELSE KEYWORD : %s\n", yylineno, yytext);
 		yylval.string = strdup(yytext);
@@ -94,6 +91,28 @@ COMA		","
 		yylval.string = strdup(yytext);
 		return ELSEKW;
 }
+=======
+{IFKW}		{
+		printf("Ln.%d: LEXER: IF KEYWORD : %s\n", yylineno, yytext);
+		yylval.string = strdup(yytext);
+		return IFKW;
+			}
+{ELSEKW}	{
+		printf("Ln.%d: LEXER: ELSE KEYWORD : %s\n", yylineno, yytext);
+		yylval.string = strdup(yytext);
+		return ELSEKW;
+	}
+{WHILEKW}	{
+		printf("Ln.%d: LEXER: WHILE KEYWORD : %s\n", yylineno, yytext);
+		yylval.string = strdup(yytext);
+		return WHILEKW;
+		}
+{FORKW}		{
+		printf("Ln.%d: LEXER: FOR KEYWORD : %s\n", yylineno, yytext);
+		yylval.string = strdup(yytext);
+		return FORKW;
+			}	
+>>>>>>> e709f1ed382590280f329887a469a79cb5fb9e41
 {IDENTIFIER}	{
 		lnolastid = yylineno;
 		printf("Ln.%d: LEXER : IDENTIFIER : %s\n", yylineno, yytext);
@@ -129,6 +148,51 @@ COMA		","
 		printf("Ln.%d : LEXER : DIV OP: %s\n", yylineno, yytext);
 		yylval.operator = strdup(yytext);
 		return DIV;
+		}
+{AND}	{
+		printf("Ln.%d: LEXER: LOGICAL AND : %s\n", yylineno, yytext);
+		yylval.string = strdup(yytext);
+		return AND;
+		}
+{OR}	{
+		printf("Ln.%d: LEXER: LOGICAL OR : %s\n", yylineno, yytext);
+		yylval.string = strdup(yytext);
+		return OR;
+		}
+{LTHAN}	{
+		printf("Ln.%d: LEXER: LOGICAL LESS THAN : %s\n", yylineno, yytext);
+		yylval.string = strdup(yytext);
+		return LTHAN;
+		}
+{GTHAN}	{
+		printf("Ln.%d: LEXER: LOGICAL GREATER THAN : %s\n", yylineno, yytext);
+		yylval.string = strdup(yytext);
+		return GTHAN;
+		}
+{LTHANEQ} {
+		printf("Ln.%d: LEXER: LOGICAL LESS THAN OR EQUAL : %s\n", yylineno, yytext);
+		yylval.string = strdup(yytext);
+		return LTHANEQ;
+		}
+{GTHANEQ} {
+		printf("Ln.%d: LEXER: LOGICAL GREATER THAN OR EQUAL : %s\n", yylineno, yytext);
+		yylval.string = strdup(yytext);
+		return GTHANEQ;
+		}
+{EQ}	{
+		printf("Ln.%d: LEXER: LOGICAL EQUAL TO : %s\n", yylineno, yytext);
+		yylval.string = strdup(yytext);
+		return EQ;
+		}
+{NOTEQ} {
+		printf("Ln.%d: LEXER: LOGICAL NOT EQUAL TO : %s\n", yylineno, yytext);
+		yylval.string = strdup(yytext);
+		return NOTEQ;
+		}
+{NOT}	{
+		printf("Ln.%d: LEXER: LOGICAL NOT : %s\n", yylineno, yytext);
+		yylval.string = strdup(yytext);
+		return NOT;
 		}
 {LPAREN}	{
 		printf("Ln.%d : LEXER : OPEN PARENTHESIS: %s\n", yylineno, yytext);

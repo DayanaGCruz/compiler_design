@@ -4,7 +4,7 @@
 #define MAX_IDENT_LEN 64 // Max. Identifier Length, enforced by lexer.l ruleset
 
 // Symbol Table implemented as a linked list
-
+//
 
 typedef enum 
 {

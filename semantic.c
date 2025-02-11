@@ -1,5 +1,6 @@
 #include "semantic.h"
 #include <stdio.h>
+<<<<<<< HEAD
 
 // TO DO 
 // Type matching - assignment & decl 
@@ -20,6 +21,9 @@
 // y = 2 + 1
 // folding 
 // y = 3
+=======
+//
+>>>>>>> e709f1ed382590280f329887a469a79cb5fb9e41
 #define RED "\x1B[31m"
 #define RESET "\x1B[0m"
 #define BOLD "\x1B[1m"
@@ -568,8 +572,8 @@ TAC* generateTAC(Node* node)
                   if(!isEmpty(operatorStack) && stackSize(operandStack) >= 2 )
                 {
                     char* op = pop(operatorStack);
-                    char* operand2 = pop(operandStack);
                     char* operand1 = pop(operandStack);
+                    char* operand2 = pop(operandStack);
                     TAC* instr = createTAC( op, operand1, operand2);
                     push(operandStack, instr->label);
                     printf(" Instr Result: %s\n", instr->label);

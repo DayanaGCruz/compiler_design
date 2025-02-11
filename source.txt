@@ -1,1 +1,39 @@
+<<<<<<< HEAD
 int k = 1.0 + 2.0;
+=======
+
+int u [ ];
+float k;
+int u  = 1;
+int 4u = j; // Illegal identifier - starts with digit
+if ( 1 == u)
+{
+    write (k);
+}
+else if (u > 1)
+{
+    write (u / 4);
+} else
+{
+    write(u);
+}
+
+if ( u > 0 && u <= 5 ) { write (u + 1);}
+float x = u + 1 - 3 / 4 * ( 1 + 1);
+
+int u = 0;
+while(u < 5)
+{
+    u = u + 1;
+}
+
+int hellofunc(int x, float y)
+{
+    return ( x + y);
+}
+
+hellofunc(u, x);
+
+
+
+>>>>>>> e709f1ed382590280f329887a469a79cb5fb9e41

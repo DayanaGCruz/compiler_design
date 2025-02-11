@@ -1,5 +1,5 @@
 %define parse.error verbose
-
+//
 %{
 #include "ast.h" // Parse/AST Tree Management
 #include "symboltable.h" /*Symbol Table Management*/
@@ -36,11 +36,20 @@ struct FactorNode* head = NULL;
 %token LPAREN RPAREN LCURLY RCURLY SEMICOLON COMA LBRACKET RBRACKET
 %token IDENTIFIER ASSIGN 
 %token INT FLOAT 
+<<<<<<< HEAD
 %token PRINTKW INTKW FLOATKW RETURNKW IFKW ELSEKW
 
 
 %type <ast> program stmt_list stmt declaration var_decl func_call func_def return_stmt array_decl array_def array_index expr_list func_args arg_list arg func_decl func_params param_list param assignment print_stmt type term factor number expr 
 %type <string> IDENTIFIER INTKW FLOATKW FLOAT INT IFKW ELSEKW
+=======
+%token PRINTKW INTKW FLOATKW RETURNKW IFKW ELSEKW WHILEKW FORKW 
+%token AND OR EQ NOTEQ LTHAN GTHAN LTHANEQ GTHANEQ NOT
+
+
+%type <ast> program stmt_list stmt declaration var_decl func_call func_def return_stmt array_decl array_def array_index expr_list func_args arg_list arg func_decl func_params param_list param assignment print_stmt type term factor number expr 
+%type <string> IDENTIFIER INTKW FLOATKW FLOAT INT  IFKW ELSEKW WHILEKW FORKW
+>>>>>>> e709f1ed382590280f329887a469a79cb5fb9e41
 %type <operator> MINUS PLUS MUL DIV
 %left PLUS MINUS
 %left MUL DIV

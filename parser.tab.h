@@ -75,7 +75,22 @@ extern int yydebug;
     FLOATKW = 276,                 /* FLOATKW  */
     RETURNKW = 277,                /* RETURNKW  */
     IFKW = 278,                    /* IFKW  */
+<<<<<<< HEAD
     ELSEKW = 279                   /* ELSEKW  */
+=======
+    ELSEKW = 279,                  /* ELSEKW  */
+    WHILEKW = 280,                 /* WHILEKW  */
+    FORKW = 281,                   /* FORKW  */
+    AND = 282,                     /* AND  */
+    OR = 283,                      /* OR  */
+    EQ = 284,                      /* EQ  */
+    NOTEQ = 285,                   /* NOTEQ  */
+    LTHAN = 286,                   /* LTHAN  */
+    GTHAN = 287,                   /* GTHAN  */
+    LTHANEQ = 288,                 /* LTHANEQ  */
+    GTHANEQ = 289,                 /* GTHANEQ  */
+    NOT = 290                      /* NOT  */
+>>>>>>> e709f1ed382590280f329887a469a79cb5fb9e41
   };
   typedef enum yytokentype yytoken_kind_t;
 #endif
@@ -92,7 +107,11 @@ union YYSTYPE
 	char* string; 
 	char* operator;
 
+<<<<<<< HEAD
 #line 96 "parser.tab.h"
+=======
+#line 107 "parser.tab.h"
+>>>>>>> e709f1ed382590280f329887a469a79cb5fb9e41
 
 };
 typedef union YYSTYPE YYSTYPE;

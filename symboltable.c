@@ -2,7 +2,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include "symboltable.h"
-
+//
 #define BOLD "\x1B[1m"
 #define RESET "\x1B[0m"
 #define BLUE "\x1b[34m"
