@@ -1,7 +1,5 @@
-%define parse.error verbose
-//
 %{
-#include "ast.h" // Parse/AST Tree Management
+#include "ast.h" /* Parse/AST Tree Management */
 #include "symboltable.h" /*Symbol Table Management*/
 #include "semantic.h"
 #include <stdio.h>
@@ -14,7 +12,7 @@ int semerrorno = 0;
 int syntaxerrorno = 0;
 extern int yylex();
 extern int yyparse();
-extern void yyerror(); 
+extern void yyerror(char *s); 
 extern FILE* yyin;
 extern int lnolastid; // Symbol table util
 struct Node* root = NULL; // AST Root Node
@@ -35,21 +33,13 @@ struct FactorNode* head = NULL;
 %token PLUS MINUS MUL DIV
 %token LPAREN RPAREN LCURLY RCURLY SEMICOLON COMA LBRACKET RBRACKET
 %token IDENTIFIER ASSIGN 
-%token INT FLOAT 
-<<<<<<< HEAD
-%token PRINTKW INTKW FLOATKW RETURNKW IFKW ELSEKW
 
 
 %type <ast> program stmt_list stmt declaration var_decl func_call func_def return_stmt array_decl array_def array_index expr_list func_args arg_list arg func_decl func_params param_list param assignment print_stmt type term factor number expr 
-%type <string> IDENTIFIER INTKW FLOATKW FLOAT INT IFKW ELSEKW
-=======
-%token PRINTKW INTKW FLOATKW RETURNKW IFKW ELSEKW WHILEKW FORKW 
+%type <string> IDENTIFIER KW_INT KW_FLOAT FLOAT INT KW_IF KW_ELSE
+%token KW_PRINT KW_INT KW_FLOAT KW_RETURN KW_IF KW_ELSE INT FLOAT KW_WHILE KW_FOR 
 %token AND OR EQ NOTEQ LTHAN GTHAN LTHANEQ GTHANEQ NOT
 
-
-%type <ast> program stmt_list stmt declaration var_decl func_call func_def return_stmt array_decl array_def array_index expr_list func_args arg_list arg func_decl func_params param_list param assignment print_stmt type term factor number expr 
-%type <string> IDENTIFIER INTKW FLOATKW FLOAT INT  IFKW ELSEKW WHILEKW FORKW
->>>>>>> e709f1ed382590280f329887a469a79cb5fb9e41
 %type <operator> MINUS PLUS MUL DIV
 %left PLUS MINUS
 %left MUL DIV
@@ -128,7 +118,7 @@ array_decl: declaration LBRACKET expr RBRACKET
 expr_list: expr_list COMA expr
 	{
 		$$ = createNode(node_expr_list);
-		$$->expr_list.expr = $3;
+//		$$->expr_list.expr = $3;
 		$$->expr_list.expr_list = $1;
 		$$->lineno = yylineno;
 	}
@@ -260,13 +250,13 @@ arg: expr
 		$$->lineno = yylineno;
 	}
 	;
-type: FLOATKW
+type: KW_FLOAT
 	{
 		$$ = createNode(node_typekw);
 		$$->typekw.type = $1;
 		$$->lineno = yylineno;
 	}
-	| INTKW 
+	| KW_INT 
 	{
 		$$ = createNode(node_typekw);
 		$$->typekw.type = $1;
@@ -281,6 +271,10 @@ assignment: var_decl ASSIGN expr SEMICOLON
 		$$->assignment.expr = $3;
 		$$->lineno = yylineno;
 	}
+  | var_decl ASSIGN expr error	
+  {
+    syntaxerrorno++; printf("Ln.%d : PARSER : SYNTAX ERROR : MISSING SEMICOLON\n", yylineno);
+  }
 	| IDENTIFIER ASSIGN expr SEMICOLON 
 	{
 		$$ = createNode(node_assignment);
@@ -291,6 +285,7 @@ assignment: var_decl ASSIGN expr SEMICOLON
 	}
 	| IDENTIFIER ASSIGN expr error {syntaxerrorno++; printf("Ln.%d : PARSER : SYNTAX ERROR : MISSING SEMICOLON\n", yylineno);}
 	| IDENTIFIER ASSIGN error SEMICOLON {syntaxerrorno++; printf("SYNTAX ERROR : Missing assignment arg.");}
+  | IDENTIFIER error expr SEMICOLON {syntaxerrorno++; printf("Ln.%d : PARSER : SYNTAX ERROR : MISSING ASSIGN OPERATOR IN ASSIGNMENT STATEMENT ('=') \n", yylineno);}
 	| array_index ASSIGN expr SEMICOLON
 	{
 		$$ = createNode(node_assignment);
@@ -300,24 +295,24 @@ assignment: var_decl ASSIGN expr SEMICOLON
 		$$->lineno = yylineno;
 	}
 	;
-print_stmt: PRINTKW LPAREN expr RPAREN SEMICOLON 
+print_stmt: KW_PRINT LPAREN expr RPAREN SEMICOLON 
 	{
 		printf("PARSER : Found  a print statement\n");
 		$$ = createNode(node_print_stmt);
 		$$->print_stmt.expr = $3;
 		$$->lineno = yylineno;
 	}
-	| PRINTKW expr SEMICOLON 
+	| KW_PRINT expr SEMICOLON 
 	{
 		printf("PARSER : Found  a print statement\n");
 		$$ = createNode(node_print_stmt);
 		$$->print_stmt.expr = $2;
 		$$->lineno = yylineno;
 	}
-	| PRINTKW LPAREN expr RPAREN error {syntaxerrorno++; printf("SYNTAX ERROR : MISSING SEMICOLON\n");}
-	| PRINTKW expr error { syntaxerrorno++; printf("SYNTAX ERROR : MISSING SEMICOLON\n");}
+	| KW_PRINT LPAREN expr RPAREN error {syntaxerrorno++; printf("SYNTAX ERROR : MISSING SEMICOLON\n");}
+	| KW_PRINT expr error { syntaxerrorno++; printf("SYNTAX ERROR : MISSING SEMICOLON\n");}
 	;
-return_stmt: RETURNKW expr SEMICOLON
+return_stmt: KW_RETURN expr SEMICOLON
 	{
 		printf("Found return statement");
 		$$ = createNode(node_return_stmt);
@@ -351,8 +346,8 @@ expr: term MINUS expr
 	}
 	| expr MINUS error {syntaxerrorno++; printf("Ln.%d: SYNTAX ERROR : Illegal statement\n", yylineno);}
 	| error MINUS term	{syntaxerrorno++; printf("Ln.%d: SYNTAX ERROR : Illegal statement\n", yylineno);}
-	| expr PLUS error {syntaxerrorno++; printf("Ln.%d: SYNTAX ERROR : Illegal statement\n", yylineno);}
-	| error PLUS term	{syntaxerrorno++; printf("Ln.%d: SYNTAX ERROR : Illegal statement\n", yylineno);}
+	| expr PLUS error {syntaxerrorno++; printf("Ln.%d: SYNTAX ERROR : Illegal statement, unmatched binary operator PLUS\n", yylineno);}
+	| error PLUS term	{syntaxerrorno++; printf("Ln.%d: SYNTAX ERROR : Illegal statement, unmatched binary operator PLUS\n", yylineno);}
 	| array_index 
 	{
 		printf("PARSER : Found  array_index expression\n");
@@ -448,6 +443,7 @@ int main(int argc, char** argv) {
         perror("fopen");
         return 1;
     }
+
     yyparse();  // Parse the entire input
     fclose(yyin);
 	traverseAST(root, 0, ""); // Print out parse tree

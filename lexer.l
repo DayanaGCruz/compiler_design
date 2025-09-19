@@ -2,35 +2,33 @@
 %{ 
 	#include "parser.tab.h"
 	#include "ast.h"
-
 	#include "symboltable.h"
 	extern int syntaxerrorno;
 	int lexerrorno;	
 	int lnolastid; // Holds line no of the last identifier token found
 	int* sen = &syntaxerrorno;
 	int* len = &lexerrorno;
-	void yyerror (char* s, int errType) {
+/*	void yyerror (char* s, int errType) {
 		if(errType == 1){(*sen)++; printf("Incremented syntax error");} 
 		else if (errType == 0) {(*len)++;} 
 		fprintf(stderr, "Ln.%d: %s: %s\n", yylineno, s, yytext);
-	}
-
+	}*/
+	void yyerror (char* s) {
+}	
 %}
 
 IDENTIFIER  [A-Za-z_]+[A-Za-z0-9_]*
 COMMENT		"//".*
 INT		    [0-9]+[0.-9]*
 FLOAT		[0-9]+.[0-9]+
-IFKW		"if"
-ELSEKW		"else"
-INTKW		"int"
-FLOATKW		"float"
-PRINTKW		"write"
-RETURNKW	"return"
-IFKW		"if"
-ELSEKW		"else"
-WHILEKW		"while"
-FORKW		"for"
+KW_IF		"if"
+KW_ELSE		"else"
+KW_INT		"int"
+KW_FLOAT		"float"
+KW_PRINT		"write"
+KW_RETURN	"return"
+KW_WHILE		"while"
+KW_FOR		"for"
 ASSIGN		"="
 AND			"&&"
 OR			"||"
@@ -54,65 +52,51 @@ RBRACKET	"]"
 SEMICOLON	";"
 COMA		","
 %%
-<<EOF>> {return 0;}
 [ \t\n]*	{/*Ignore whitespace*/}
 {COMMENT} {
 	// Ignore comments
 	printf("Ln.%d : LEXER : // COMMENT: %s\n", yylineno, yytext);
 	}
-{PRINTKW}	{
+{KW_PRINT}	{
 		printf("Ln.%d : LEXER : PRINT KEYWORD: %s\n", yylineno, yytext);
 		yylval.string = strdup(yytext);
-		return PRINTKW;
+		return KW_PRINT;
 		}	
-{RETURNKW}	{
-		printf("Ln.%d : LEXER : RETURN KEYWORD: %s\n", yylineno, yytext);
+{KW_RETURN}	{
+		printf("Ln.%d : LEXER :  KEYWORD: %s\n", yylineno, yytext);
 		yylval.string = strdup(yytext);
-		return RETURNKW;
+		return KW_RETURN;
 }
-{FLOATKW}	{
+{KW_FLOAT}	{
 		printf("Ln.%d: LEXER : FLOAT TYPE KEYWORD : %s\n", yylineno, yytext);
 		yylval.string = strdup(yytext);
-		return FLOATKW;
+		return KW_FLOAT;
 			}
-{INTKW}		{
+{KW_INT}		{
 		printf("Ln.%d: LEXER: INTEGER TYPE KEYWORD : %s\n", yylineno, yytext);
 		yylval.string = strdup(yytext);
-		return INTKW;
+		return KW_INT;
 			}
-<<<<<<< HEAD
-{IFKW} {
-		printf("Ln.%d: LEXER: ELSE KEYWORD : %s\n", yylineno, yytext);
-		yylval.string = strdup(yytext);
-		return IFKW;
-}
-{ELSEKW} {
-		printf("Ln.%d: LEXER: ELSE KEYWORD : %s\n", yylineno, yytext);
-		yylval.string = strdup(yytext);
-		return ELSEKW;
-}
-=======
-{IFKW}		{
+{KW_IF}		{
 		printf("Ln.%d: LEXER: IF KEYWORD : %s\n", yylineno, yytext);
 		yylval.string = strdup(yytext);
-		return IFKW;
+		return KW_IF;
 			}
-{ELSEKW}	{
+{KW_ELSE}	{
 		printf("Ln.%d: LEXER: ELSE KEYWORD : %s\n", yylineno, yytext);
 		yylval.string = strdup(yytext);
-		return ELSEKW;
+		return KW_ELSE;
 	}
-{WHILEKW}	{
+{KW_WHILE}	{
 		printf("Ln.%d: LEXER: WHILE KEYWORD : %s\n", yylineno, yytext);
 		yylval.string = strdup(yytext);
-		return WHILEKW;
+		return KW_WHILE;
 		}
-{FORKW}		{
+{KW_FOR}		{
 		printf("Ln.%d: LEXER: FOR KEYWORD : %s\n", yylineno, yytext);
 		yylval.string = strdup(yytext);
-		return FORKW;
+		return KW_FOR;
 			}	
->>>>>>> e709f1ed382590280f329887a469a79cb5fb9e41
 {IDENTIFIER}	{
 		lnolastid = yylineno;
 		printf("Ln.%d: LEXER : IDENTIFIER : %s\n", yylineno, yytext);
@@ -234,10 +218,11 @@ COMA		","
 		return RBRACKET;
 }
 [A-Za-z0-9\_\-\.]* { //Digits, hyphens, and letters NOT INT FLOAT KEYWORD or IDENTIFIER generate generic lexical error messages
-		yyerror("LEXER : Lexical Error: Illegal Identifier", 0);
+	
+ // yyerror("LEXER : Lexical Error: Illegal Identifier", 0);
 		}
 . 		{ // Symbols not included in grammar generate lexical error messages - illegal symbol
-		yyerror("LEXER : Lexical Error: Illegal symbol", 0);
+	//	yyerror("LEXER : Lexical Error: Illegal symbol", 0);
 		}
 %%
 

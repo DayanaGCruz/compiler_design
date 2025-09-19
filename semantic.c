@@ -1,6 +1,5 @@
 #include "semantic.h"
 #include <stdio.h>
-<<<<<<< HEAD
 
 // TO DO 
 // Type matching - assignment & decl 
@@ -21,9 +20,7 @@
 // y = 2 + 1
 // folding 
 // y = 3
-=======
 //
->>>>>>> e709f1ed382590280f329887a469a79cb5fb9e41
 #define RED "\x1B[31m"
 #define RESET "\x1B[0m"
 #define BOLD "\x1B[1m"
@@ -503,7 +500,7 @@ TAC* generateTAC(Node* node)
             case node_array_index:
                 if(node->array_index.identifier != NULL)
                 {
-                    generateTAC(node->array_index.identifier);
+                    //generateTAC(node->array_index.identifier);
                 }
                 break;
             case node_print_stmt:

@@ -4,14 +4,14 @@
 #include "ast.h"
 #include "symboltable.h"
 
-typedef struct 
+typedef struct TAC 
 {
     char* op;
     char* arg1;
     char* arg2;
     char* label;
     struct TAC* next; 
-}TAC;
+} TAC;
 
 
 
@@ -30,6 +30,7 @@ TAC* generateTACUtil(Node* node);
 TAC* generateTAC( Node* root);
 TAC* createTAC(char* op, char* arg1, char* arg2);
 void printTAC(TAC* tac);
+void printAllTAC(TAC* tacHead);
 Stack* createStack();
 void push(Stack* stack, char* value);
 char* pop(Stack* stack);
