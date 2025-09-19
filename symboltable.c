@@ -149,10 +149,8 @@ void printSymbolTable(SymbolTable* table)
 {
     // Table header
     printf("|| SYMBOL TABLE ||\n");
-    printf("===================================================================================================================================================================================\n");
-    printf( "| %-30s | %-50s | %-30s | %-30s | %-30s | %-10s |\n", 
+    printf( "| %-10s | %-10s | %-10s | %-10s | %-10s | %-10s |\n", 
            "Type", "Parent Scope", "Scope Type", "Data Type", "Name", "Line No.");
-    printf("===================================================================================================================================================================================\n");
 
     // Iterate over the symbol table
     for (int i = 0; i < table->size; i++)
@@ -163,7 +161,7 @@ void printSymbolTable(SymbolTable* table)
             if (symbol->parent_scope == NULL)
             {
                 // No parent scope: Print "N/A" for parent scope fields
-                printf("| %-30s | %-50s | %-30s | %-30s | %-30s | %-10d |\n", 
+                printf("| %-10s | %-10s | %-10s | %-10s | %-10s | %-10d |\n", 
                     getDeclTypeString(symbol->declType), 
                     "N/A", 
                     getScopeTypeString(symbol->scope), 
@@ -176,7 +174,7 @@ void printSymbolTable(SymbolTable* table)
 
                 char parentInfo[61];
                 snprintf(parentInfo, sizeof(parentInfo), "%s %s", getDeclTypeString(symbol->parent_scope->declType), symbol->parent_scope->identifier);
-                printf("| %-30s | %-50s | %-30s | %-30s | %-30s | %-10d |\n", 
+                printf("| %-10s | %-10s | %-10s | %-10s | %-10s | %-10d |\n", 
                     getDeclTypeString(symbol->declType), 
                     parentInfo, 
                     getScopeTypeString(symbol->scope), 
@@ -188,8 +186,6 @@ void printSymbolTable(SymbolTable* table)
         }
     }
     
-    // Table footer
-    printf("=======================================================================================================================================================================================================\n");
 }
 
 void printSymbol(Symbol* symbol)

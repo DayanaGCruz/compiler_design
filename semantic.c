@@ -4,7 +4,7 @@
 // TO DO 
 // Type matching - assignment & decl 
 // sem
-// var deccl
+// var decl
 // type matching 
 
 // opt
@@ -37,6 +37,8 @@ static Stack * operatorStack = NULL;
 static Stack * operandStack = NULL;
 static Stack * operandTypeStack = NULL;
 int counter = 1;
+
+
 void semanticAnalysis(Node* root, SymbolTable* symbolTable)
 {
     if(root == NULL) return;
@@ -188,7 +190,9 @@ void semanticAnalysis(Node* root, SymbolTable* symbolTable)
                 printf("Ln.%d. SEMANTIC ERROR: Undeclared variable reference 2 : Variable %s not declared\n", root->lineno, root->assignment.identifier);
             } else { lExprType = getSymbolTypeString(sym->dataType); }
             semanticAnalysis(root->assignment.expr, symbolTable);
-            checkTypeCompatibility(lExprType, rExprType);
+            if (!checkTypeCompatibility(lExprType, rExprType)) {
+            printf("Semantic error: Incompatible types in assignment\n");
+            }
             break;
         case node_typekw:
             printf("IN TYPE KW\n");
@@ -605,7 +609,8 @@ int checkTypeCompatibility(const char* type1, const char* type2)
         printf("%s", "Type is NULL\n");
         return 0;
     }
-    if (strcmp(type1, type2) == 0) return 1; 
+    printf("TYPE 1: %s, TYPE 2: %s\n", type1, type2);
+    if (strcmp(type1, type2) == 1) { return 1;} 
     else {return 0;} 
 }
 
